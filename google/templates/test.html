@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!--
+        以下CSS地址请在安装软件了替换成本地的地址
+        CSS地址请使用:
+        http://localhost:9000/bigemap.js/v2.1.0/bigemap.css
+        软件下载地址 http://www.bigemap.com/reader/download/detail201802017.html
+    -->
+    <!-- <link href='http://www.bigemap.com:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet' /> -->
+    <link href='http://localhost:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet' />
+    <!--
+        JS地址请使用：
+        http://localhost:9000/bigemap.js/v2.1.0/bigemap.js
+    -->
+    <script src='http://localhost:9000/bigemap.js/v2.1.0/bigemap.js'></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%;height: 400px }
+    </style>
+    <title>Google Map Streets</title>
+</head>
+<body>
+
+    <div style="height: 400px">
+        <div id='map'></div>
+    </div>
+    <h1>111</h1>
+
+
+
+    <script>
+        //软件配置信息地址，软件安装完成之后使用本地地址，如：http://localhost:9000
+        BM.Config.HTTP_URL = 'http://localhost:9000';
+        // 在ID为map的元素中实例化一个地图，并设置地图的ID号为 bigemap.googlemap-streets，ID号程序自动生成，无需手动配置，并设置地图的投影为百度地图 ，中心点，默认的级别和显示级别控件
+        var map = BM.map('map', 'bigemap.googlemap-streets', { center: [0, 0], zoom: 2, zoomControl: true });
+        BM.marker([50.5, 30.5]).addTo(map);
+    </script>
+</body>
+</html>                                                                                                                        

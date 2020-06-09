@@ -1,0 +1,73 @@
+{
+    "html_attributions": [],
+    "result": {
+        "address_components": [
+            {
+                "long_name": "沙子营街四巷南",
+                "short_name": "沙子营街四巷南",
+                "types": [
+                    "route"
+                ]
+            },
+            {
+                "long_name": "大兴区",
+                "short_name": "大兴区",
+                "types": [
+                    "sublocality_level_1",
+                    "sublocality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "北京市",
+                "short_name": "北京市",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "中国",
+                "short_name": "CN",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "adr_address": "<span class=\"country-name\">中国</span><span class=\"region\">北京市</span><span class=\"locality\">大兴区</span><span class=\"street-address\">沙子营街四巷南</span>",
+        "business_status": "OPERATIONAL",
+        "formatted_address": "中国北京市大兴区沙子营街四巷南",
+        "geometry": {
+            "location": {
+                "lat": 39.676747,
+                "lng": 116.481795
+            },
+            "viewport": {
+                "northeast": {
+                    "lat": 39.6781868802915,
+                    "lng": 116.4831304802915
+                },
+                "southwest": {
+                    "lat": 39.6754889197085,
+                    "lng": 116.4804325197085
+                }
+            }
+        },
+        "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+        "name": "北京深蓝嘉际电子有限公司",
+        "place_id": "ChIJNQbDGLPL8TURtn602cpI-OM",
+        "plus_code": {
+            "compound_code": "MFGJ+MP 中国北京市大兴区",
+            "global_code": "8PFRMFGJ+MP"
+        },
+        "types": [
+            "point_of_interest",
+            "establishment"
+        ],
+        "url": "https://maps.google.com/?cid=16426959676906962614",
+        "utc_offset": 480,
+        "vicinity": "大兴区沙子营街四巷南"
+    },
+    "status": "OK"
+}

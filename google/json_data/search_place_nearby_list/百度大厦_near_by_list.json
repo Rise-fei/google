@@ -1,0 +1,52 @@
+{
+    "html_attributions": [],
+    "results": [
+        {
+            "business_status": "OPERATIONAL",
+            "formatted_address": "中国北京市海淀区上地十街10号",
+            "geometry": {
+                "location": {
+                    "lat": 40.0509597,
+                    "lng": 116.3007982
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 40.05230002989272,
+                        "lng": 116.3021085298927
+                    },
+                    "southwest": {
+                        "lat": 40.04960037010728,
+                        "lng": 116.2994088701073
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
+            "id": "fd371dcfcc10793e706b8a2aa1fe73f00fad8d08",
+            "name": "百度大厦",
+            "photos": [
+                {
+                    "height": 3456,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/117789844570302180120\">Kun Guan</a>"
+                    ],
+                    "photo_reference": "CmRaAAAAiOAt4q1lv4Cfj6fcZniXNRHYwCjHSoYrmqICG9VFdYfY8M5J6RgsNJOvzdlzG2yTzhNIbu9O-IwIVMirkLMtQD1LX54--KIQHOKaJq-SEss25Ut01pL0ZGf-IxiYD2vsEhCIL9sWXSqpbuGyHi377_JHGhSZaCdrrb8Mpv3XRGZpe_0AVmovmA",
+                    "width": 4608
+                }
+            ],
+            "place_id": "ChIJ-RU09xVW8DURKzT7Y421ao0",
+            "plus_code": {
+                "compound_code": "3822+98 海淀区 中国北京市",
+                "global_code": "8PGR3822+98"
+            },
+            "rating": 4.1,
+            "reference": "ChIJ-RU09xVW8DURKzT7Y421ao0",
+            "types": [
+                "premise",
+                "point_of_interest",
+                "establishment"
+            ],
+            "user_ratings_total": 43
+        }
+    ],
+    "status": "OK"
+}
