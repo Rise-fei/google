@@ -20,8 +20,10 @@ urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
     url(r'^google_map/', spider_view.google),
-    url(r'^test', spider_view.test),
+    url(r'^bigemap/', spider_view.bigemap),
+    url(r'^login/', spider_view.login),
+    url(r'^login_check/', spider_view.login_check),
     url(r'^search_word/', spider_view.search_place_text),
     url(r'^search_word2/', spider_view.search_place_text2),
-    url(r'^', spider_view.google),
+    url(r'^$', spider_view.google),
 ]

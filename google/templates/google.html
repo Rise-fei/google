@@ -14,20 +14,21 @@
 <div class="container-fluid">
     <div id="map"></div>
     {% csrf_token %}
-    <div id="search_div" >
+    <div id="search_div">
 
-            <input  id="pac-input" class="controls form-control" style="width: 40%;display: inline;float: left"  type="text" placeholder="Search Box">
-            <select  class="form-control"  style="width: 80px;display: inline;float: left" id="select_meter" >
-                <option value="100">周围100米</option>
-                <option value="500">周围500米</option>
-                <option value="1000">周围1公里</option>
-                <option value="5000">周围5公里</option>
-                <option value="10000">周围10公里</option>
-                <option selected value="50000">周围50公里</option>
-            </select>
+        <input id="pac-input" class="controls form-control" style="width: 40%;display: inline;float: left" type="text"
+               placeholder="Search Box">
+        <select class="form-control" style="width: 80px;display: inline;float: left" id="select_meter">
+            <option value="100">周围100米</option>
+            <option value="500">周围500米</option>
+            <option value="1000">周围1公里</option>
+            <option value="5000">周围5公里</option>
+            <option value="10000">周围10公里</option>
+            <option selected value="50000">周围50公里</option>
+        </select>
 
-            <button class="btn btn-primary" id="search_button" style="float:left;" >具体搜索</button>
-            <button  class="btn btn-info" id="search_button2" style="float: left" >附近搜索</button>
+        <button class="btn btn-primary" id="search_button" style="float:left;">具体搜索</button>
+        <button class="btn btn-info" id="search_button2" style="float: left">附近搜索</button>
 
     </div>
     <div id="search_content" style="display: none;width: 400px;height: 400px">
@@ -67,7 +68,7 @@
 
 <script>
     // 此脚本：谷歌地图模块代码
-    var map, infoWindow, zoom, position, labels, marker,circle,circle_options
+    var map, infoWindow, zoom, position, labels, marker, circle, circle_options
 
     // 初始化谷歌地图
     function initMap() {
@@ -89,10 +90,10 @@
             fillColor: '#FF0000',
             fillOpacity: 0.2,
             map: map,
-            radius:50000,
-            center:marker.getPosition(),
-            draggable:true,
-            visible:true,
+            radius: 50000,
+            center: marker.getPosition(),
+            draggable: true,
+            visible: true,
         })
         {#circle.setMap(map)#}
         {#circle.setDraggable(true);#}
@@ -145,7 +146,7 @@
 
 
         // 圆的拖拽后事件监听，拖拽后，将标记、地图中心都设置为圆的中心
-        circle.addListener('dragend',function () {
+        circle.addListener('dragend', function () {
             var tem_positon = circle.getCenter()
             window.setTimeout(function () {
                 map.panTo(tem_positon);
@@ -160,8 +161,6 @@
             },500)
             * */
         })
-
-
 
 
         // 用于定位
@@ -191,8 +190,6 @@
             // Browser doesn't support Geolocation
             handleLocationError(false, infoWindow, map.getCenter());
         }
-
-
 
 
         // 添加多个标记
@@ -243,15 +240,15 @@
     ]
 </script>
 <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU&libraries=places&callback=initMap"
-        async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU&libraries=places&callback=initMap" async defer></script>
 
 <script>
     $.ajaxSetup({
 
-        async:false
+        async: false
 
-        });
+    });
+
     function get_search_list(datas, data_html) {
         $('#table_content').append(data_html);
     }
@@ -265,7 +262,7 @@
         })
 
         $('#search_button').click(function () {
-             alert('正在进行精准搜索！')
+            alert('正在进行精准搜索！')
             alert('请耐心等待，画面即将锁定！')
             var current_lat = map.getBounds().Ya.i;
             var current_lng = map.getBounds().Ua.i;

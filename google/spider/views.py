@@ -1,16 +1,50 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.http import JsonResponse
 import requests
 import json
 import time
 from django.conf import settings
+import requests
 # Create your views here.
 def google(request):
-    return render(request,'google.html')
-def test(request):
+    if request.session.get('is_login'):
+        return render(request,'google.html')
+    else:
+        return redirect('/login/')
+def bigemap(request):
+    request.session['a'] = 1
     print(1)
-    return render(request,'test.html')
+    return render(request, 'bigemap.html')
 
+def login(request):
+    return render(request,'login.html')
+
+def login_check(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    print(username)
+    print(password)
+    url = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=1&version=3.2' % (username,password)
+    res = requests.get(url)
+    response_content = res.content.decode()
+
+    if response_content == 'success':
+        ret = {
+            'status':1,
+            'msg':'登录成功',
+        }
+        request.session['is_login'] = True
+    else:
+        ret = {
+            'status': 0,
+            'msg': '登录失败',
+        }
+        request.session['is_login'] = False
+    print(response_content)
+    return JsonResponse(ret)
+
+
+# 暂时不用
 def search_word(request):
     # 获取地图中心的经纬度坐标
     lat = request.POST.get('lat')
@@ -136,7 +170,10 @@ def search_detail(place_id,word):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     data_result = data['result']
-    data_html = "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+    data_html = "<tr><td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+    d_position = data_result['geometry']['location']
+    lat = d_position['lat']
+    lng = d_position['lng']
     d_name = data_result.get('name', "")
     d_email = data_result.get('email', "")
     d_type = data_result.get('type', "")
@@ -147,7 +184,7 @@ def search_detail(place_id,word):
     d_youtube = data_result.get('youtube', "")
     d_twitter = data_result.get('twitter', "")
     d_search_word = word
-    data_html = data_html % (
+    data_html = data_html % (lat,lng,
     d_name, d_website, d_email, d_type, d_addr, d_phone, d_facebook, d_youtube, d_twitter, d_search_word)
     # print(data_html)
     ret = {
@@ -274,6 +311,4 @@ def search_place_text2(request):
     radius = request.POST.get('radius')
     ret = search_near_by(lat,lng,word,radius)
     return JsonResponse(ret)
-
-
 

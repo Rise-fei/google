@@ -25,7 +25,7 @@ SECRET_KEY = '2go2*wxur12j7b6j5-z6n#+237%!6vqo23&2n%zx)=6=_ycs9-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -77,9 +77,13 @@ WSGI_APPLICATION = 'google.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'google_map',
+        'USER': 'root',
+        'PASSWORD': 'Shengshikeji.1',
+        'HOST': '47.98.164.255',
+        'PORT': '',
+    },
 }
 
 
@@ -121,3 +125,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+# STATIC_ROOT = os.path.join(BASE_DIR,'static')
+# print(STATIC_ROOT)

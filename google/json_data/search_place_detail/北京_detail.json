@@ -1,0 +1,142 @@
+{
+    "html_attributions": [],
+    "result": {
+        "address_components": [
+            {
+                "long_name": "北京市",
+                "short_name": "北京市",
+                "types": [
+                    "locality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "北京市",
+                "short_name": "北京市",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "中国",
+                "short_name": "CN",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            }
+        ],
+        "adr_address": "<span class=\"country-name\">中国</span>北京市",
+        "formatted_address": "中国北京市",
+        "geometry": {
+            "location": {
+                "lat": 39.90419989999999,
+                "lng": 116.4073963
+            },
+            "viewport": {
+                "northeast": {
+                    "lat": 40.2164962,
+                    "lng": 116.7829835
+                },
+                "southwest": {
+                    "lat": 39.6612714,
+                    "lng": 116.0119343
+                }
+            }
+        },
+        "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
+        "name": "北京市",
+        "photos": [
+            {
+                "height": 714,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/115455114095176588980\">Guido Douven</a>"
+                ],
+                "photo_reference": "CmRaAAAA4LuhHDMCxB3vl6WGLnYKUmu0r72YfB26OMOQNpLfj_2rvPl7kXAyMaixw9jLls5xUXoOlU2LsMgEEEW4hLEng7wkHmwVj2nahaecxmu3VH2YdDW8tXkVJz47aLQM8hC4EhCvjbaOigiLmZvXKEXFgkBPGhTdc_LnoNSI5htOYcea3UrqZar6YQ",
+                "width": 1000
+            },
+            {
+                "height": 310,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/111740299763715535762\">Rafael R.</a>"
+                ],
+                "photo_reference": "CmRaAAAA60fhxtyTjssJOfw5SYMvXsQHv0c03vBkvXHOEekJd4-6i_ypvNYdiYGdidve6QDXHzg8OHvMggBge49BoJvd7hTMn21V42_M4T0LGVH0ZdPBKskJgIfWDxk44nj-4RYtEhAyv4wgKulNAyBWF33kJ4yXGhSDpcynNxNhR4CuT8IabnynSPDpSw",
+                "width": 474
+            },
+            {
+                "height": 360,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/108314691827335748047\">김창호</a>"
+                ],
+                "photo_reference": "CmRaAAAALgmwumIqrCVr_-2fnGn2fmqEJkbrQL9EYK0cU9UbBRmVI5lJOLQhmCW80lEAdDxhpiQHtiw47JmU1AvgzpqHpkjV4avL4m42ja90toPquzmWLpVzs88ukaaq5mgEPtuBEhBni7PyZNKQbIZh4gK3ISrEGhSpZb9SnUJ1Fzalw3BKJxnW9i5ctA",
+                "width": 529
+            },
+            {
+                "height": 3136,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105303505373661530610\">indoorfish</a>"
+                ],
+                "photo_reference": "CmRaAAAAtT5EuEIpvvxG2LZ-JQBNb_ex6PaDvE4lUGDqU6Nm6zDfreQWMPxtjSFGsRXCE__qkpcmKAY5yyOFffcv4J0cMwtfr_O0PgNFR75LLND_XlykrZCI1ujSg2l26eyJNV1PEhAGXaHSzX1T9PXaWAwhYcr8GhQUIkHAnblX_ggia34M9hM5K_sKHg",
+                "width": 2350
+            },
+            {
+                "height": 270,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/116472287705449638007\">hamid khorshidi</a>"
+                ],
+                "photo_reference": "CmRaAAAAuQIPydxQGMmeR1hTTnjdg_ISJV7j-sCn1rqy1Iud2vYSZUPCubgiip10ml-GyUiLy3ApwumxKxoqi3mwuqJow9LbZbA_u6mxYepxJKhZFwoLNEHEN15JbtmF81UqmSFwEhAEx6AdnqCsg7ILDpirWqAqGhSj2UWIP1iBb-63SjsrmQTiBn88qg",
+                "width": 600
+            },
+            {
+                "height": 3648,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/117608239347743754077\">Efren Castillo</a>"
+                ],
+                "photo_reference": "CmRaAAAAPPk2wWCbvZTpyyhU4n6KvgNgn0TyogeFoLimKXZDMD51-_TbJsbAKp7EeGLKM2ESmF2BMeHLDxOJzUvWSeD8VP-nHfcY-90gX-78O-We3GZFos1jFDydBTsoefQEEtF7EhC2hgrmuxL4g2Pxf-bqToxoGhQuwpZrUf4Xf4KU2m3H5h_0mlkQYw",
+                "width": 2736
+            },
+            {
+                "height": 2432,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/111219817058504774689\">Luigi Iodice</a>"
+                ],
+                "photo_reference": "CmRaAAAAa3aGK0w5_4lukKDqudI95rlQST35k5-kbNiPx4ii6tIHtdM28nNQ-f--pXgWlOzhvG_BQMuGGB1ElZu4n36rGBfcKHll2YwwLKYlNFRbxIqH4ANFBZ3rDfcO0Q8MSJJkEhCvSCWmR-77WJ9cs6KU0HVCGhQjA8bQ_jXpsxNGoIocWw5d5Wkhkw",
+                "width": 3286
+            },
+            {
+                "height": 333,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/116744448796316309653\">Tracy Wang</a>"
+                ],
+                "photo_reference": "CmRaAAAAv_QaarHf3SJGCgwC8AfR--r3dZvYGzB3dNyfxdLLSyXMMPZdmt-oU0dV6ha2q1vNnoOlczbne0UhECXnT8hDpnuk78lQi6-jXXe8Yj1hj2ojUYk7MYd8UgJmpBq7jys-EhBL3U4w4cvjRQ-N9QP149rOGhT2QuNbHVu5betzvddA5GZgYwV0aw",
+                "width": 500
+            },
+            {
+                "height": 1688,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/107515584349499833414\">吉易</a>"
+                ],
+                "photo_reference": "CmRaAAAAM8w4JpmaDuqROi_lWRjWJyhGjOkyT0UfMtbOaojQpI7hTEkO1Uouioxlhz7754PQvp_x53CU4Nxmsn55tYUmYjOBMw3BJEWIY6gLQZeyvdi7A4t-mpOX2UBCCQrIigjaEhAFtiBj3avq1EEbqbF433A5GhSEOdv3i_MCKn0ag2rMrE5Z19VfQA",
+                "width": 3000
+            },
+            {
+                "height": 1361,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/118348691546563554659\">Matan Malinoff</a>"
+                ],
+                "photo_reference": "CmRaAAAAS_7wcZN9xGEz0SkQ3P30WObeASLoAiUK-SajymidcrA3dYVl-a6wd8edjrisjFEzXqziKu9MgeoHDDh0RBCy69NFhXRbbEVR-ijRLG4Fewob1EezLF9dejw9g7eYtSyxEhDBTGOVF0GUvhRYKYSaBWitGhSO6cdS_XNPXqV-m9PD22usuNac3A",
+                "width": 2048
+            }
+        ],
+        "place_id": "ChIJuSwU55ZS8DURiqkPryBWYrk",
+        "types": [
+            "locality",
+            "political"
+        ],
+        "url": "https://maps.google.com/?q=%E4%B8%AD%E5%9B%BD%E5%8C%97%E4%BA%AC%E5%B8%82&ftid=0x35f05296e7142cb9:0xb9625620af0fa98a",
+        "utc_offset": 480,
+        "vicinity": "北京市"
+    },
+    "status": "OK"
+}
