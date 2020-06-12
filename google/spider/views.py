@@ -5,15 +5,16 @@ import json
 import time
 from django.conf import settings
 import requests
+from django.middleware.clickjacking import XFrameOptionsMiddleware
 # Create your views here.
 def google(request):
     if request.session.get('is_login'):
         return render(request,'google.html')
     else:
         return redirect('/login/')
+
 def bigemap(request):
-    request.session['a'] = 1
-    print(1)
+
     return render(request, 'bigemap.html')
 
 def login(request):
@@ -27,21 +28,44 @@ def login_check(request):
     url = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=1&version=3.2' % (username,password)
     res = requests.get(url)
     response_content = res.content.decode()
-
     if response_content == 'success':
         ret = {
             'status':1,
             'msg':'登录成功',
         }
+        request.session['username'] = username
+        print(res.cookies)
         request.session['is_login'] = True
+        response = JsonResponse(ret)
+        response.set_cookie('session_key',res.cookies.get('sessionid'))
     else:
         ret = {
             'status': 0,
             'msg': '登录失败',
         }
         request.session['is_login'] = False
+        request.COOKIES['session_key'] = ""
+        response = JsonResponse(ret)
     print(response_content)
-    return JsonResponse(ret)
+    return response
+
+
+def logout(request):
+    session_key = request.COOKIES.get('session_key')
+    print(session_key)
+    request.COOKIES['session_key'] = ""
+    request.session['is_login'] = False
+
+    # 还需要向trade项目发送注销请求，将服务器中存储该客户的session信息清除(将session_key 以参数的形式放入请求中去)！！！
+    url = 'http://www.sstrade.net:8080/ssapi/logoutaccount2?session_key=%s' % session_key
+    res = requests.get(url)
+    response_content = res.content.decode()
+
+    if response_content == 'delete ok':
+        print('注销成功')
+    else:
+        print('向服务器发送清楚session请求出错')
+    return redirect('/login/')
 
 
 # 暂时不用

@@ -12,13 +12,44 @@
 <body>
 
 <div class="container-fluid">
+    <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://sstrade.net/">晟时科技</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">当前用户</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.session.username }} <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+{#            <li><a href="#">Action</a></li>#}
+
+{#            <li role="separator" class="divider"></li>#}
+            <li><a href="/logout/">注销</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
     <div id="map"></div>
     {% csrf_token %}
     <div id="search_div">
 
         <input id="pac-input" class="controls form-control" style="width: 40%;display: inline;float: left" type="text"
                placeholder="Search Box">
-        <select class="form-control" style="width: 80px;display: inline;float: left" id="select_meter">
+        <select class="form-control" style="display: inline;float: left" id="select_meter">
             <option value="100">周围100米</option>
             <option value="500">周围500米</option>
             <option value="1000">周围1公里</option>
