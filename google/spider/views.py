@@ -336,6 +336,16 @@ def search_place_text2(request):
     # 获取地图中心的经纬度坐标
     lat = request.POST.get('lat')
     lng = request.POST.get('lng')
+    lng_float = float(lng)
+    if lng_float < 0:
+        lng_float = lng_float % -360
+        if lng_float < -180:
+            lng_float = lng_float + 360
+    else:
+        lng_float = lng_float % 360
+        if lng_float >180:
+            lng_float = lng_float - 360
+    lng = lng_float
     word = request.POST.get('word')
     radius = request.POST.get('radius')
     ret = search_near_by(lat,lng,word,radius)

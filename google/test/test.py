@@ -1,7 +1,7 @@
 import requests
 import json
 
-location = '%s,%s' % (34, 101)
+location = '%s,%s' % (37.96741773604804, 2554.729619189455931)
 radius = 50000
 query = 'sofa'
 key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
@@ -14,3 +14,5 @@ print(url)
 json_str = res.content.decode()
 data = json.loads(json_str)
 print(data)
+with open('tttttest.json','w',encoding='utf-8') as f:
+      json.dump(data, f, ensure_ascii=False, indent=4)
