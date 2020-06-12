@@ -288,8 +288,8 @@
         $('#search_button').click(function () {
             alert('正在进行精准搜索！')
             alert('请耐心等待，画面即将锁定！')
-            var current_lat = map.getBounds().Ya.i;
-            var current_lng = map.getBounds().Ua.i;
+            var current_lat = marker.getPosition().lat();
+            var current_lng = marker.getPosition().lng();
             var word = $('#pac-input').val();
             var radius = $('#select_meter').val();
             $.ajax({
@@ -332,8 +332,8 @@
         $('#search_button2').click(function () {
             alert('正在进行搜索附近！')
             alert('请耐心等待，画面即将锁定！')
-            var current_lat = map.getBounds().Ya.i;
-            var current_lng = map.getBounds().Ua.i;
+            var current_lat = marker.getPosition().lat();
+            var current_lng = marker.getPosition().lng();
             var word = $('#pac-input').val();
             var radius = $('#select_meter').val();
             $.ajax({
