@@ -9,98 +9,53 @@
 
     <link href='http://www.bigemap.com:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet'/>
     <link href='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet'/>
+    <link rel='stylesheet' href='/static/css/bigemap.css'/>
     <script src='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.js'></script>
 
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        #map {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            height: 500px;
-            border: 1px solid #66afe9;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
-        }
-
-        .tool {
-            position: absolute;
-            z-index: 10;
-            right: 10px;
-            top: 0px;
-        }
-
-        #info {
-            width: 700px;
-            position: fixed;
-            top: 10px;
-            left: 43%;
-            z-index: 10;
-            margin-left: -170px;
-            color: #155724;
-            background-color: #d4edda;
-            padding: .75rem 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: .25rem;
-        }
-
-        input {
-            border: 1px solid #ccc;
-            padding: 7px 5px;
-            display: inline-block;
-            width: 380px;
-            height: 34px;
-            border-radius: 3px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
-        }
-
-        select {
-            border: 1px solid #ccc;
-            padding: 7px 5px;
-            display: inline-block;
-            width: 120px;
-            border-radius: 3px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-            float: right;
-        }
-
-        input:focus {
-            border-color: #66afe9;
-            outline: 0;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
-        }
-
-        .search—btn {
-            float: right;
-        }
-    </style>
 
     <title>Google Map Streets</title>
 </head>
 <body>
 
 
-<div>
-    <p class="tool">
-        <a id="satellite" class="btn btn-danger" href="javascript:void (0);">卫星</a>
-        <a id="street" class="btn btn-warning" href="javascript:void (0);">电子</a>
-    </p>
-    <div style="height: 500px">
+<div id="main_content">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="http://sstrade.net/">晟时科技</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                    <li><a href="#">Link</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">当前用户</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">{{ request.session.username }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {#            <li><a href="#">Action</a></li>#}
+
+                            {#            <li role="separator" class="divider"></li>#}
+                            <li><a href="/logout/">注销</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div style="height: 552px;position: relative;z-index: 10">
+        <p class="tool">
+            <a id="satellite" class="btn btn-danger" href="javascript:void (0);">卫星</a>
+            <a id="street" class="btn btn-warning" href="javascript:void (0);">电子</a>
+        </p>
         <div id='map'></div>
         <div id="info">
             <button id="search_button2" class="btn btn-primary search—btn">附近查询</button>
@@ -123,7 +78,7 @@
 
     {% csrf_token %}
     <div>
-        <table class="table table-bordered">
+        <table id="table-content" class="table table-bordered">
             <thead>
             <th>名称</th>
             <th>网址</th>

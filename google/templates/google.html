@@ -12,8 +12,9 @@
 <body>
 
 <div class="container-fluid">
-    <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
+    <div id="top_content">
+        <nav id="nav_nav" class="navbar navbar-inverse">
+            <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="http://sstrade.net/">晟时科技</a>
@@ -43,37 +44,29 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    <div id="map"></div>
-    {% csrf_token %}
-    <div id="search_div">
 
-        <input id="pac-input" class="controls form-control" style="width: 40%;display: inline;float: left" type="text"
-               placeholder="Search Box">
-        <select class="form-control" style="display: inline;float: left" id="select_meter">
-            <option value="100">周围100米</option>
-            <option value="500">周围500米</option>
-            <option value="1000">周围1公里</option>
-            <option value="5000">周围5公里</option>
-            <option value="10000">周围10公里</option>
-            <option selected value="50000">周围50公里</option>
-        </select>
+            <div id="map"></div>
+        {% csrf_token %}
+        <div id="search_div">
 
-        <button class="btn btn-primary" id="search_button" style="float:left;">具体搜索</button>
-        <button class="btn btn-info" id="search_button2" style="float: left">附近搜索</button>
+            <input id="pac-input" class="controls form-control" style="width: 40%;display: inline;float: left" type="text"
+                   placeholder="Search Box">
+            <select class="form-control" style="display: inline;float: left" id="select_meter">
+                <option value="100">周围100米</option>
+                <option value="500">周围500米</option>
+                <option value="1000">周围1公里</option>
+                <option value="5000">周围5公里</option>
+                <option value="10000">周围10公里</option>
+                <option selected value="50000">周围50公里</option>
+            </select>
 
-    </div>
-    <div id="search_content" style="display: none;width: 400px;height: 400px">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                搜索结果
-            </div>
-            <div class="panel-footer" id="search_footer">
-                先不用了
-            </div>
+            <button class="btn btn-primary" id="search_button" style="float:left;">具体搜索</button>
+            <button class="btn btn-info" id="search_button2" style="float: left">附近搜索</button>
+
         </div>
-    </div>
-    <div>
-        <table class="table table-bordered">
+      </div>
+
+        <table class="table table-bordered" style="position: relative;top: 552px">
             <thead>
             <th>名称</th>
             <th>网址</th>
@@ -90,9 +83,9 @@
 
             </tbody>
         </table>
-    </div>
 
-    <div>
+
+    <div style="position: relative;top: 552px;">
 
     </div>
 </div>

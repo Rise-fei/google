@@ -28,6 +28,7 @@ def login_check(request):
     url = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=1&version=3.2' % (username,password)
     res = requests.get(url)
     response_content = res.content.decode()
+    print(response_content)
     if response_content == 'success':
         ret = {
             'status':1,
@@ -39,9 +40,13 @@ def login_check(request):
         response = JsonResponse(ret)
         response.set_cookie('session_key',res.cookies.get('sessionid'))
     else:
+        di = {
+            'login is full':'登录账号已到达最大授权数',
+            'out of service time':'超出产品服务时间',
+        }
         ret = {
             'status': 0,
-            'msg': '登录失败',
+            'msg': di[response_content],
         }
         request.session['is_login'] = False
         request.COOKIES['session_key'] = ""
