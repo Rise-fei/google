@@ -6,19 +6,21 @@ class LoginCheckMiddleware(MiddlewareMixin):
     def process_request(self,request):
         print(request.session.get('is_login'))
         print(request.path_info)
-        white_url = ['/login/','/login_check/','/admin/','/static/','/logout/','^$']
+        # 如果请求url在白名单内，说明该请求不必登录就可用！
+        white_url = ['/login/','/login_check/','/admin/','/static/','/logout/','/offline/','^$']
         for re_url in white_url:
             if re.match(re_url,request.path):
-                print('路径匹配成功')
+                # print('路径匹配成功')
                 return
 
-        print('路径匹配不成功')
+        # print('路径匹配不成功')
+        # 否则，判断登录状态
         if request.session.get('is_login'):
             session_key = request.COOKIES.get('session_key')
             if session_key:
                 # 如果oa管理员通过一键下线当前客户所有终端，那么此web项目目前是不知道的，所以向主服务器发送请求查询一下
                 # 但是此方法不好，该每次发送请求，都要向主服务器查询，最好改成：
-                # （主服务器执行一键下线后，给当前web项目发送请求，告知当前项目哪一个客户下线了，在此web项目中加以判断）
+                # ****（主服务器执行一键下线后，给当前web项目发送请求，告知当前项目哪一个客户下线了，在此web项目中加以判断，后续优化！！）
                 url = 'http://www.sstrade.net:8080/ssapi/query_is_login?session_key=%s' % session_key
                 res = requests.get(url)
                 if res.content.decode() == 'yes':

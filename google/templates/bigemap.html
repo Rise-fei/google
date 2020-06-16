@@ -12,14 +12,13 @@
     <link rel='stylesheet' href='/static/css/bigemap.css'/>
     <script src='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.js'></script>
 
-
-    <title>Google Map Streets</title>
+    <title>GMS外贸系统</title>
 </head>
 <body>
 
 
 <div id="main_content">
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse" style="z-index: 10">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -51,7 +50,7 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    <div style="height: 552px;position: relative;z-index: 10">
+    <div style="height: 552px;position: relative;z-index: 8">
         <p class="tool">
             <a id="satellite" class="btn btn-danger" href="javascript:void (0);">卫星</a>
             <a id="street" class="btn btn-warning" href="javascript:void (0);">电子</a>
@@ -78,7 +77,7 @@
 
     {% csrf_token %}
     <div>
-        <table id="table-content" class="table table-bordered">
+        <table id="table-content" class="table table-bordered" style="z-index: 5">
             <thead>
             <th>名称</th>
             <th>网址</th>
@@ -270,9 +269,37 @@
     })
 </script>
 </body>
-<script>
-    $(function () {
 
-    })
-</script>
+{#<script>#}
+{#    window.onbeforeunload = onunload_message;#}
+{##}
+{#    function onunload_message(event) {#}
+{#        if (event.clientX > document.body.clientWidth && event.clientY < 0 || event.altKey) {#}
+{#            //鼠标相对于用户屏幕的水平位置 - 窗口左上角相对于屏幕左上角的水平位置 = 鼠标在当前窗口上的水平位置#}
+{#            var n = event.screenX - window.screenLeft;#}
+{#            //鼠标在当前窗口内时，n<m，b为false；鼠标在当前窗口外时，n>m，b为true。20这个值是指关闭按钮的宽度#}
+{#            var b = n > document.documentElement.scrollWidth - 20;#}
+{#            //鼠标在客户区内时，window.event.clientY>0；鼠标在客户区外时，window.event.clientY<0#}
+{#            if (b && event.clientY < 0 || event.altKey || event.ctrlKey) {#}
+{#                console.log(11111111111111)#}
+{#            } else if (event.clientY > document.body.clientHeight || event.altKey) {#}
+{##}
+{#                console.log(123456)#}
+{#            }#}
+{#            $(function () {#}
+{##}
+{#                $.ajax({#}
+{#                    url: '/close_page/',#}
+{#                    type: 'get',#}
+{#                    success: function (ret) {#}
+{##}
+{#                    }#}
+{#                })#}
+{#            })#}
+{#        }#}
+{##}
+{##}
+{#        return "您确定离开该网页吗？";#}
+{#    }#}
+{#</script>#}
 </html>

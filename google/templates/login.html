@@ -81,10 +81,31 @@
             data: "username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + "{{ csrf_token }}",
             success: function (ret) {
                 if(ret.status==1){
-                    location.href = '/google_map/'
+                    location.href = '/bigemap/'
                 }
-                else{
-                    alert(ret.msg)
+                else if(ret.status==0){
+                    var flag = confirm(ret.msg + ',确认登录会下线其他终端用户（最早登录的终端），确认吗？')
+                    if (flag){
+                        $.ajax({
+                            url:'/offline/',
+                            type:'post',
+                            data: "username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + "{{ csrf_token }}",
+                            success:function (ret) {
+                                if(ret.code==1)
+                                {
+                                    alert('下线成功，点击跳转')
+                                    location.href = '/bigemap/'
+                                }
+                                else{
+                                    alert('下线失败，请联系管理员进行操作！')
+                                }
+                            }
+                        })
+                    }
+                    else{
+                        alert(ret.msg)
+                    }
+
                 }
             }
         })

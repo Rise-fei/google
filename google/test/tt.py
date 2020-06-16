@@ -8,6 +8,10 @@ headers = {
 url = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=1&version=3.2' % (
 username, password)
 print(url)
+
+username = 'ceshi'
+product = 1
+url = 'http://www.sstrade.net:8080/ssapi/query_cust_auth_num?username=%s&product=%s' % (username,product)
 res = requests.get(url,headers=headers)
 response_content = res.content.decode()
 print(response_content)
