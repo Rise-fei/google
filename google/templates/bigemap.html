@@ -77,7 +77,7 @@
 
     {% csrf_token %}
     <div>
-        <table id="table-content" class="table table-bordered" style="z-index: 5">
+        <table id="table-content" class="table table-bordered" style="z-index: 5;table-layout: fixed">
             <thead>
             <th>名称</th>
             <th>网址</th>
@@ -103,8 +103,12 @@
     //软件配置信息地址
     BM.Config.HTTP_URL = 'http://47.244.57.68:9000';
     // 在ID为map的元素中实例化一个地图，并设置地图的ID号为 bigemap.googlemap-streets，ID号程序自动生成，无需手动配置，并设置地图的投影为百度地图 ，中心点，默认的级别和显示级别控件
-    var map = BM.map('map', 'bigemap.googlemap-streets', {center: [0, 0], zoom: 2, zoomControl: true});
+    var map = BM.map('map', 'bigemap.googlemap-streets', {center: [0, 0], zoom: 2, zoomControl: true, minZoom: 2});
     // 创建一个标记，添加到map中
+    {#var corner1 = BM.latLng(-180, 90);#}
+    {#var corner2 = BM.latLng(180, -90);#}
+    {#var bounds = BM.latLngBounds(corner1, corner2);#}
+    {#map.setMaxBounds(bounds)#}
 
     var google_satellite = BM.tileLayer('bigemap.googlemap-satellite');
     var google_street = BM.tileLayer('bigemap.googlemap-streets');
@@ -140,6 +144,24 @@
         circle.setRadius(radius);
         circle.setLatLng(position_temp);
     });
+    map.on('moveend', function (e) {
+        window.setTimeout(function () {
+            var div_size_y = map.getSize().y
+            var top_y = map.getPixelBounds().max.y
+            var bottom_y = map.getPixelBounds().min.y
+            var sw_positon = map.getBounds()._southWest
+            var ne_postion = map.getBounds()._northEast
+            var bottom_yy = map.latLngToContainerPoint(map.getBounds()._southWest).y
+            console.log(div_size_y, top_y, bottom_y,top_y-bottom_y);
+            var flag = (top_y < div_size_y || bottom_yy  < div_size_y);
+            if (flag) {
+                console.log(11111111111);
+                map.flyTo(marker.getLatLng())
+            }
+        }, 2)
+        // 获取当前点击的坐标，设置标记和地图为点击位置。
+    });
+
 
     marker.on('click', function (e) {
         window.setTimeout(function () {
@@ -169,7 +191,7 @@
             var lng = $(this).attr('lng');
             marker.setLatLng({lat: lat, lng: lng})
         })
-    };
+    }
 
     function get_search_list(datas, data_html) {
         $('#table_content').append(data_html);
@@ -188,7 +210,7 @@
         $('#search_button').click(function () {
             alert('正在进行精准搜索！')
             alert('请耐心等待，画面即将锁定！')
-            var position = map.getCenter();
+            var position = marker.getLatLng();
             var current_lat = position.lat;
             var current_lng = position.lng;
             var word = $('#pac-input').val();
@@ -236,7 +258,7 @@
         $('#search_button2').click(function () {
             alert('正在进行搜索附近！')
             alert('请耐心等待，画面即将锁定！')
-            var position = map.getCenter();
+            var position = marker.getLatLng();
             var current_lat = position.lat;
             var current_lng = position.lng;
             var word = $('#pac-input').val();

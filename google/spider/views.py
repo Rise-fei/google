@@ -401,7 +401,6 @@ def search_near_by(lat,lng,word,radius):
             data_final_html += ret.get('data_html', '')
 
 
-
         ret = {
             'status': 0,
             'msg': '查询到%s附近的搜索结果' % word,
