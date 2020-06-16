@@ -78,6 +78,8 @@ def offline(request):
 def login(request):
     return render(request,'login.html')
 
+def tttt(request):
+    return render(request,'index.html')
 
 
 def login_check(request):

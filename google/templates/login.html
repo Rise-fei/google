@@ -1,78 +1,79 @@
 {% load static %}
 <!doctype html>
-<!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>
-<html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang=""> <!--<![endif]-->
+<html lang="en">
 <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+    <!-- Loding font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css">
+
     <title>晟时科技 - 谷歌地图登陆</title>
-    <meta name="description" content="Ela Admin - HTML5 Admin Template">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-    <link rel="stylesheet" href="{% static 'system/assets/css/normalize.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/themify-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/pe-icon-7-filled.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/flag-icon.min.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/cs-skin-elastic.css' %}">
-    <link rel="stylesheet" href="{% static 'system/assets/css/style.css' %}">
-
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-
-    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 </head>
-<body class="bg-dark">
+<body>
 
-<div class="sufee-login d-flex align-content-center flex-wrap">
-    <div class="container">
-        <div class="login-content">
-            <div class="login-logo">
-                <a href="#">
-                    <img class="align-content" src="{% static 'img/logo.png' %}" alt="">
-                </a>
-            </div>
-            <div class="login-form">
+<!-- Backgrounds -->
+
+<div id="login-bg" class="container-fluid">
+
+    <div class="bg-img"></div>
+    <div class="bg-color"></div>
+</div>
+
+<!-- End Backgrounds -->
+
+<div class="container" id="login">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="login">
+
+                <h1>Login</h1>
+
+                <!-- Loging form -->
                 <form>
                     {% csrf_token %}
                     <div class="form-group">
-                        <label>用户名</label>
-                        <input type="email" class="form-control" placeholder="Username..." id="username">
+                        <input type="text" class="form-control" id="username"    placeholder="Username...">
                     </div>
                     <div class="form-group">
-                        <label>密码</label>
-                        <input type="password" class="form-control" placeholder="Password..." id="password">
+                        <input type="password" class="form-control" id="password" placeholder="Password...">
                     </div>
-                    <div>
-                        <input type="checkbox" checked id="checkbox" name="checkbox"
-                               onclick="console.log(this.checked)">
-                        <span>7天免登录</span>
-                    </div>
-                    <button type="button" class="btn btn-success btn-flat m-b-30 m-t-30" onclick="login()">登陆</button>
+                    <br>
+                    <button class="btn btn-lg btn-block btn-success"  onclick="login()">登录</button>
+                    {#				  <div class="form-check">#}
+                    {##}
+                    {#                          <label class="switch">#}
+                    {#                          <input type="checkbox">#}
+                    {#                          <span class="slider round"></span>#}
+                    {#                        </label>#}
+                    {#				  <label class="form-check-label" for="exampleCheck1">Remember me</label>#}
+                    {#				  #}
+                    {#                      <label class="forgot-password"><a href="#">Forgot Password?</a></label>#}
+                    {##}
+                    {#				</div>#}
+
+
                 </form>
+                <!-- End Loging form -->
+
             </div>
         </div>
     </div>
 </div>
-
-<script src="{% static 'system/assets/js/vendor/jquery-2.1.4.min.js' %}"></script>
-<script src="{% static 'system/assets/js/popper.min.js' %}"></script>
-<script src="{% static 'system/assets/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'system/assets/js/jquery.matchHeight.min.js' %}"></script>
-<script src="{% static 'system/assets/js/main.js' %}"></script>
 <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
 <script>
     function login() {
+
         var username = document.getElementById('username').value;
         var password = document.getElementById('password').value;
-        var checkbox = document.getElementById('checkbox').checked;
+        {#var checkbox = document.getElementById('checkbox').checked;#}
         console.log(username);
         console.log(password);
         $.ajax({
@@ -80,29 +81,25 @@
             type: 'post',
             data: "username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + "{{ csrf_token }}",
             success: function (ret) {
-                if(ret.status==1){
+                if (ret.status == 1) {
                     location.href = '/bigemap/'
-                }
-                else if(ret.status==0){
+                } else if (ret.status == 0) {
                     var flag = confirm(ret.msg + ',确认登录会下线其他终端用户（最早登录的终端），确认吗？')
-                    if (flag){
+                    if (flag) {
                         $.ajax({
-                            url:'/offline/',
-                            type:'post',
+                            url: '/offline/',
+                            type: 'post',
                             data: "username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + "{{ csrf_token }}",
-                            success:function (ret) {
-                                if(ret.code==1)
-                                {
+                            success: function (ret) {
+                                if (ret.code == 1) {
                                     alert('下线成功，点击跳转')
                                     location.href = '/bigemap/'
-                                }
-                                else{
+                                } else {
                                     alert('下线失败，请联系管理员进行操作！')
                                 }
                             }
                         })
-                    }
-                    else{
+                    } else {
                         alert(ret.msg)
                     }
 
@@ -111,5 +108,6 @@
         })
     }
 </script>
+
 </body>
 </html>
