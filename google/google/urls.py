@@ -21,7 +21,6 @@ from django.conf import settings
 urlpatterns = [
     url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),
     url(r'^admin/', admin.site.urls),
-    url(r'^tttt/', spider_view.tttt),
     url(r'^google_map/', spider_view.google),
     url(r'^bigemap/', spider_view.bigemap),
     url(r'^login/', spider_view.login),
@@ -31,5 +30,6 @@ urlpatterns = [
     url(r'^login_check/', spider_view.login_check),
     url(r'^search_word/', spider_view.search_place_text),
     url(r'^search_word2/', spider_view.search_place_text2),
+    url(r'^get_email/', spider_view.get_email),
     url(r'^$', spider_view.bigemap),
 ]

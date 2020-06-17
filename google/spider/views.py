@@ -6,6 +6,9 @@ import time
 from django.conf import settings
 import requests
 from spider.models import CustLoginRecord
+from tools.query_email import *
+
+
 # Create your views here.
 def google(request):
     if request.session.get('is_login'):
@@ -321,9 +324,9 @@ def search_detail(place_id,word):
     lat = d_position['lat']
     lng = d_position['lng']
     d_name = data_result.get('name', "")
-    d_email = data_result.get('email', "")
     d_type = data_result.get('type', "")
     d_website = data_result.get('website', "")
+    d_email = get_email(d_website) if d_website else ""
     d_addr = data_result.get('formatted_address', "")
     d_phone = data_result.get('formatted_phone_number', "")
     d_facebook = data_result.get('facebook', "")

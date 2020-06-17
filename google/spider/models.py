@@ -11,3 +11,18 @@ class CustLoginRecord(models.Model):
 
 
 
+class SearchResult(models.Model):
+    name = models.CharField(max_length=64)
+    website = models.CharField(max_length=128)
+    email = models.CharField(max_length=128)
+    type = models.CharField(max_length=32)
+    address = models.CharField(max_length=128)
+    phone = models.CharField(max_length=32)
+    facebook = models.CharField(max_length=64)
+    youtube = models.CharField(max_length=64)
+    twitter = models.CharField(max_length=64)
+    search_word = models.CharField(max_length=64)
+    country = models.CharField(max_length=32)
+    place_id = models.CharField(max_length=128)
+
+
