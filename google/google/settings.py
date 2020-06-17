@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'spider.middleware.LoginCheckMiddleware'
+    'spider.middleware.LoginCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'google.urls'
