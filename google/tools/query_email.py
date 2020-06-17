@@ -3,6 +3,46 @@ import time
 import re
 from collections import Counter
 
+
+def add_data(data,SearchResult,word):
+    for data_result in data['results']:
+        place_id = data_result['place_id']
+        type_str = ""
+        for s in data_result['types']:
+            type_str += s + ','
+
+        data_html = '''
+                 <tr id='%s'>
+                     <td>
+                          <input class='data_td' type='checkbox'>
+                     </td>
+                     <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                     <td><p></p></td>
+                 </tr>
+
+                 '''
+
+        lat = data_result['geometry']['location']['lat']
+        lng = data_result['geometry']['location']['lng']
+        name = data_result['name']
+        data_html = data_html % (place_id,lat,lng,name)
+        try:
+            if not SearchResult.objects.filter(place_id=place_id):
+                SearchResult.objects.create(name=name, type=type_str, search_word=word, place_id=place_id,
+                                                      td_html=data_html)
+            else:
+                print('数据库中已经存在该数据，无需再次添加！！！')
+        except Exception as e:
+            print(e)
+
 def googlemail(kw):
     mailstart = 0
     while mailstart <= 20:
@@ -57,3 +97,5 @@ def get_email(website):
     if len(maildata) > 5:
         print(maildata)
         return maildata
+    else:
+        return ""

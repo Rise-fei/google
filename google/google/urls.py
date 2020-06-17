@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^login_check/', spider_view.login_check),
     url(r'^search_word/', spider_view.search_place_text),
     url(r'^search_word2/', spider_view.search_place_text2),
+    url(r'^search_detail_by_ids/', spider_view.search_detail_by_ids),
     url(r'^get_email/', spider_view.get_email),
     url(r'^$', spider_view.bigemap),
 ]

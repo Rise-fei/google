@@ -4,6 +4,20 @@ body {
     padding: 0;
 }
 
+
+input[type=checkbox] {
+    width: 20px;
+}
+.table>thead>tr>th {
+    vertical-align: middle;
+}
+td {
+    overflow:hidden;
+    /*white-space:nowrap;*/
+    width:100%;
+    text-overflow:ellipsis;
+}
+
 .navbar {
     position: fixed;
     margin-bottom: 0 !important;

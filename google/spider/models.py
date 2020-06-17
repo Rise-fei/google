@@ -13,16 +13,20 @@ class CustLoginRecord(models.Model):
 
 class SearchResult(models.Model):
     name = models.CharField(max_length=64)
-    website = models.CharField(max_length=128)
-    email = models.CharField(max_length=128)
-    type = models.CharField(max_length=32)
-    address = models.CharField(max_length=128)
-    phone = models.CharField(max_length=32)
-    facebook = models.CharField(max_length=64)
-    youtube = models.CharField(max_length=64)
-    twitter = models.CharField(max_length=64)
+    website = models.CharField(max_length=512,null=True)
+    email = models.CharField(max_length=128,null=True)
+    type = models.CharField(max_length=128,null=True)
+    address = models.CharField(max_length=128,null=True)
+    phone = models.CharField(max_length=32,null=True)
+    facebook = models.CharField(max_length=128,null=True)
+    youtube = models.CharField(max_length=128,null=True)
+    twitter = models.CharField(max_length=128,null=True)
     search_word = models.CharField(max_length=64)
-    country = models.CharField(max_length=32)
-    place_id = models.CharField(max_length=128)
+    country = models.CharField(max_length=32,null=True)
+    place_id = models.CharField(max_length=128,unique=True)
+    td_html = models.TextField(null=True)
+    status = models.IntegerField(default=0)
+    update_time = models.DateTimeField(auto_now_add=True,null=True)
+
 
 

@@ -81,10 +81,11 @@
     <div>
         <table id="table-content" class="table table-bordered" style="z-index: 5;table-layout: fixed">
             <thead>
+            <th><input type="checkbox"><button id="search_detail" class="btn btn-default" type="button">详情查询</button></th>
             <th>名称</th>
             <th>网址</th>
             <th>email</th>
-            <th>类型</th>
+            <th>国家</th>
             <th>地址</th>
             <th>电话</th>
             <th>Facebook</th>
@@ -191,11 +192,14 @@
         $('.search_result_name').click(function () {
             var lat = $(this).attr('lat');
             var lng = $(this).attr('lng');
-            marker.setLatLng({lat: lat, lng: lng})
+            marker.setLatLng({lat: lat, lng: lng});
+            {#map.setZoom(6);#}
+            map.panTo(marker.getLatLng())
+            circle.setLatLng(marker.getLatLng())
         })
     }
 
-    function get_search_list(datas, data_html) {
+    function get_search_list( data_html) {
         $('#table_content').append(data_html);
         click_a();
     }
@@ -212,20 +216,20 @@
         $('#search_button').click(function () {
             alert('正在进行精准搜索！')
             alert('请耐心等待，画面即将锁定！')
-            var position = marker.getLatLng();
-            var current_lat = position.lat;
-            var current_lng = position.lng;
+            {#var position = marker.getLatLng();#}
+            {#var current_lat = position.lat;#}
+            {#var current_lng = position.lng;#}
             var word = $('#pac-input').val();
-            var radius = $('#select_meter').val();
+            {#var radius = $('#select_meter').val();#}
             $.ajax({
                 url: '/search_word/',
                 type: 'post',
                 data: {
                     'word': word,
                     'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                    'lat': current_lat,
-                    'lng': current_lng,
-                    'radius': radius,
+                    {#'lat': current_lat,#}
+                    {#'lng': current_lng,#}
+                    {#'radius': radius,#}
                 },
                 success: function (ret) {
                     if (ret.status == 1) {
@@ -242,17 +246,15 @@
                         circle.setLatLng(location);
                         $('#table_content').append(ret.data_html);
                         click_a();
-
-
-                    } else if (ret.status == 0) {
+                        /*    } else if (ret.status == 0) {
                         alert('查询到附近相关结果');
                         var datas = ret.data.results;
                         var data_html = ret.data_final_html;
                         console.log(datas);
-                        get_search_list(datas, data_html)
+                        get_search_list(datas, data_html)*/
 
                     } else {
-                        alert('no data!')
+                        alert(ret.msg)
                     }
                 }
             })
@@ -276,19 +278,62 @@
                     'lng': current_lng,
                 },
                 success: function (ret) {
-                    if (ret.status == 0) {
+                    if (ret.status == 0)
+                    {
+                        var datas = ret.data.results;
+                        get_search_list(ret.data_final_html)
+                    }
+                    /*{
                         alert('查询到附近相关结果');
                         var datas = ret.data.results;
                         var data_html = ret.data_final_html;
                         console.log(datas);
                         get_search_list(datas, data_html)
 
-                    } else {
+                    }*/
+
+                    else {
                         alert('未查询到附近相关结果!')
                     }
                 }
             })
         });
+        $('#search_detail').click(function () {
+            var li = $("input[class='data_td']:checked")
+            var id_list = [];
+            for (var i=0;i<li.length;i++){
+                // 将每一个勾选状态的 placeid 放到一个列表中
+                var id = $(li[i]).parent().parent().attr('id')
+                id_list.push(id)
+            }
+            // 将id_list 变为json串
+            var ids = JSON.stringify(id_list)
+            $.ajax({
+                url:'/search_detail_by_ids/?place_ids=' + ids,
+                type:'get',
+                success:function (ret) {
+                    // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+                    var data = ret.data;
+                    for (var i=0;i<data.length;i++){
+                        var place_id = data[i].pid
+                        var td_html = data[i].td_html
+                        // 根据place_id 找到之前的tr，然后替换为新的td_html
+                        var str_id = '#' + place_id;
+                        $(str_id).replaceWith(td_html)
+                    }
+
+                }
+            })
+        });
+        $('th input:checkbox').change(function () {
+            var e = $(this)[0].checked;
+            if (e){
+                 $('input:checkbox').prop('checked',true);
+            }
+            else{
+                $('input:checkbox').prop('checked',false);
+            }
+        })
 
     })
 </script>

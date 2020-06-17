@@ -5,8 +5,9 @@ import json
 import time
 from django.conf import settings
 import requests
-from spider.models import CustLoginRecord
+from spider.models import CustLoginRecord,SearchResult
 from tools.query_email import *
+from threading import Thread
 
 
 # Create your views here.
@@ -304,6 +305,8 @@ def search_word(request):
 
     return JsonResponse(ret)
 
+
+"""
 def search_detail(place_id,word):
     key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
     language = 'zh-CN'
@@ -319,10 +322,27 @@ def search_detail(place_id,word):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     data_result = data['result']
-    data_html = "<tr><td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+    data_html = '''
+    <tr>
+        <td place_id='%s'>
+            <input type='checkbox'>
+        </td>
+        <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+    </tr>
+    '''
     d_position = data_result['geometry']['location']
     lat = d_position['lat']
     lng = d_position['lng']
+    d_place_id = data_result.get('place_id')
     d_name = data_result.get('name', "")
     d_type = data_result.get('type', "")
     d_website = data_result.get('website', "")
@@ -333,8 +353,20 @@ def search_detail(place_id,word):
     d_youtube = data_result.get('youtube', "")
     d_twitter = data_result.get('twitter', "")
     d_search_word = word
-    data_html = data_html % (lat,lng,
-    d_name, d_website, d_email, d_type, d_addr, d_phone, d_facebook, d_youtube, d_twitter, d_search_word)
+    d_address_components = data_result.get('address_components')
+    d_country = ""
+    for i in d_address_components:
+        if "country" in i['types']:
+            d_country = i['long_name']
+
+    data_html = data_html % (d_place_id , lat, lng,
+                             d_name, d_website, d_email, d_country, d_addr, d_phone, d_facebook, d_youtube, d_twitter,
+                             d_search_word)
+
+    SearchResult.objects.update_or_create(name=d_name,website=d_website,email=d_email,
+                              address=d_addr,phone=d_phone,
+                                facebook=d_facebook,youtube=d_youtube,twitter=d_twitter,
+                                search_word=d_search_word,country=d_country,place_id=d_place_id)
     # print(data_html)
     ret = {
         'status': 1,
@@ -345,8 +377,120 @@ def search_detail(place_id,word):
     }
     return ret
 
+"""
+
+
+
+
+def search_detail(place_id,word,p_obj):
+    key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
+    language = 'zh-CN'
+    fields = 'address_component,adr_address,business_status,formatted_address,geometry,icon,name,permanently_closed,photo,place_id,plus_code,type,url,utc_offset,vicinity,' \
+             'price_level,rating,review,user_ratings_total,' \
+             'formatted_phone_number,international_phone_number,opening_hours,website'
+    url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&key=%s&language=%s&fields=%s' % (place_id, key, language, fields)
+    res = requests.get(url)
+    json_str = res.content.decode()
+    data = json.loads(json_str)
+    # print(data)
+    path = settings.BASE_DIR + '\json_data\\search_place_detail\\' + word + '_detail.json'
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+    data_result = data['result']
+    data_html = '''
+    <tr id='%s'>
+        <td>
+            <input class='data_td' type='checkbox'>
+        </td>
+        <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+        <td><p>%s</p></td>
+    </tr>
+    '''
+    d_position = data_result['geometry']['location']
+    lat = d_position['lat']
+    lng = d_position['lng']
+    d_place_id = data_result.get('place_id')
+    d_name = data_result.get('name', "")
+    d_type = data_result.get('type', "")
+    d_website = data_result.get('website', "")
+    d_email = get_email(d_website) if d_website else ""
+    d_addr = data_result.get('formatted_address', "")
+    d_phone = data_result.get('formatted_phone_number', "")
+    d_facebook = data_result.get('facebook', "")
+    d_youtube = data_result.get('youtube', "")
+    d_twitter = data_result.get('twitter', "")
+    d_search_word = word
+    d_address_components = data_result.get('address_components')
+    d_country = ""
+    for i in d_address_components:
+        if "country" in i['types']:
+            d_country = i['long_name']
+
+    data_html = data_html % (d_place_id , lat, lng,
+                             d_name, d_website, d_email, d_country, d_addr, d_phone, d_facebook, d_youtube, d_twitter,
+                             d_search_word)
+
+    p_obj.website =d_website
+    p_obj.email = d_email
+    p_obj.address = d_addr
+    p_obj.phone = d_phone
+    p_obj.facebook = d_facebook
+    p_obj.youtube = d_youtube
+    p_obj.twitter = d_twitter
+    p_obj.country = d_country
+    p_obj.td_html = data_html
+    p_obj.status = 1
+    p_obj.save()
+
+
+    # SearchResult.objects.update_or_create(name=d_name,website=d_website,email=d_email,
+    #                           address=d_addr,phone=d_phone,
+    #                             facebook=d_facebook,youtube=d_youtube,twitter=d_twitter,
+    #                             search_word=d_search_word,country=d_country,place_id=d_place_id,td_html=data_html)
+    # print(data_html)
+    # ret = {
+    #     'status': 1,
+    #     'place_id': place_id,
+    #     'msg': '成功搜索到%s对应的具体位置' % word,
+    #     'data': data,
+    #     'data_html': data_html,
+    # }
+    return data_html
+
+
+
+def search_detail_by_ids(request):
+    ids = request.GET.get('place_ids')
+    id_list = json.loads(ids)
+    data_list = []
+    for id in id_list:
+        p_obj = SearchResult.objects.get(place_id=id)
+        if p_obj.status == 0:
+            # 说明只进行了第一层搜索，即将进行详情搜索！！！
+            # 搜索完详情，将详情信息更新到数据库中，并设置status = 1
+            word = p_obj.search_word
+            data_html = search_detail(id,word,p_obj)
+        else:
+            data_html = p_obj.td_html
+        data_list.append({'td_html': data_html, 'pid': id})
+    ret = {
+        'data':data_list,  # [{},{},{},{}]
+    }
+    return JsonResponse(ret)
+
+
+
+# 第一层：搜索附近的相关信息（粗略搜索，只有名字等信息。）
 def search_near_by(lat,lng,word,radius):
-    # 如果第一次的text 搜索没有结果,那么执行附近搜索
+    # 执行附近搜索,只是优先显示附近的结果
     print('当前搜索地点关键字无具体结果,即将搜索附近结果！')
     location = '%s,%s' % (lat, lng)
     radius = radius
@@ -362,7 +506,7 @@ def search_near_by(lat,lng,word,radius):
     data = json.loads(json_str)
     print(data)
     # data['test'] = [1,2,3]
-    print(len(data['results']))
+    # print(len(data['results']))
 
     if len(data['results']) == 0:
         print('nonono data')
@@ -372,9 +516,9 @@ def search_near_by(lat,lng,word,radius):
         }
     else:
         next_page_token = data.get('next_page_token')
-
+        print(next_page_token)
         while next_page_token:
-            time.sleep(1)
+            time.sleep(2)
             print(len(data['results']))
             print('下一页的token：%s' % next_page_token)
             # data['test'].extend([1,2])
@@ -382,6 +526,7 @@ def search_near_by(lat,lng,word,radius):
             key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
             next_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=%s&pagetoken=%s" % (key, next_page_token)
             next_res = requests.get(next_url)
+            print(next_url)
             next_json_str = next_res.content.decode()
             next_data = json.loads(next_json_str)
             print(data)
@@ -395,8 +540,56 @@ def search_near_by(lat,lng,word,radius):
         path = settings.BASE_DIR + '\\json_data\\search_place_nearby_list\\' + query + '_near_by_list.json'
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
+        print(len(data['results']))
+
+        data_final_html = ''
+        for data_result in data['results']:
+            place_id = data_result['place_id']
+            # type_str = ""
+            # for s in data_result['types']:
+            #     type_str += s + ','
 
 
+
+            data_html = '''
+            <tr id='%s'>
+                <td>
+                     <input class='data_td' type='checkbox'>
+                </td>
+                <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+            </tr>
+            
+            '''
+
+            lat = data_result['geometry']['location']['lat']
+            lng = data_result['geometry']['location']['lng']
+            name = data_result['name']
+            data_html = data_html % (place_id,lat,lng,name)
+            data_final_html += data_html
+
+        print(len(data['results']))
+            # 开启子线程，执行数据库添加操作！！！
+        t = Thread(target=add_data, args=(data, SearchResult, word))
+        t.start()
+
+        ret = {
+            'status': 0,
+            'msg': '查询到%s附近的搜索结果' % word,
+            'data': data,
+            "data_final_html":data_final_html,
+        }
+
+
+        '''
         data_final_html = ""
 
         data_results_list = data.get('results')  # 获取列表
@@ -412,15 +605,18 @@ def search_near_by(lat,lng,word,radius):
             'data': data,
             'data_final_html': data_final_html,
         }
+        
+        '''
+
     return ret
 
 # 精准搜索
 def search_place_text(request):
     # 获取地图中心的经纬度坐标
-    lat = request.POST.get('lat')
-    lng = request.POST.get('lng')
+    # lat = request.POST.get('lat')
+    # lng = request.POST.get('lng')
     word = request.POST.get('word')
-    radius = request.POST.get('radius')
+    # radius = request.POST.get('radius')
     key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
     fields = 'place_id,formatted_address,name,types,geometry'
     language = 'zh-CN'
@@ -429,10 +625,13 @@ def search_place_text(request):
     res = requests.get(url)
     json_str = res.content.decode()
     data = json.loads(json_str)
-    print(111111)
     if len(data['candidates']) == 0:
-        print('没有搜索到具体位置,即将搜索附近位置')
-        ret = search_near_by(lat,lng,word,radius)
+        print('没有搜索到具体位置')
+        # ret = search_near_by(lat,lng,word,radius)
+        ret = {
+            'status': 0,
+            'msg': '未查询该关键字对应的精准位置',
+        }
     else:
         # 搜索到具体位置了。
         path = settings.BASE_DIR + '\\json_data\\search_place\\' + word + '_place.json'
@@ -444,8 +643,10 @@ def search_place_text(request):
             place_id = data['candidates'][0]['place_id']
             ret = search_detail(place_id,word)
         except:
-            ret = {}
-            pass
+            ret = {
+                'status': 0,
+                'msg': '未查询该关键字对应的精准位置',
+            }
 
     return JsonResponse(ret)
 

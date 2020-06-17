@@ -1,56 +1,28 @@
-<!DOCTYPE html>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <!--
-        以下CSS地址请在安装软件了替换成本地的地址
-        CSS地址请使用:
-        http://localhost:9000/bigemap.js/v2.1.0/bigemap.css
-        软件下载地址 http://www.bigemap.com/reader/download/detail201802017.html
-    -->
-    <link href='http://www.bigemap.com:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet' />
-    <link href="https://cdn.bootcss.com/Buttons/2.0.0/css/buttons.min.css" rel="stylesheet">
-    <!--
-        JS地址请使用：
-        http://localhost:9000/bigemap.js/v2.1.0/bigemap.js
-    -->
-    <script src='http://www.bigemap.com:9000/bigemap.js/v2.1.0/bigemap.js'></script>
-    <style>
-        body { margin: 0; padding: 0; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-        .tool{
-            position: absolute;
-            z-index: 10;
-            right: 10px;
-            top:0px;
-        }
-    </style>
-    <title>切换图层</title>
-</head>
-<body>
-<p class="tool">
-    <a id="satellite" class="button button-tiny button-rounded button-primary" href="javascript:void (0);">卫星</a>
-    <a id="street" class="button button-tiny button-rounded button-primary" href="javascript:void (0);">电子</a>
-</p>
-<div id='map'></div>
-<script type="text/javascript">// 软件配置信息地址，软件安装完成之后使用本地地址，如：http://localhost:9000
-        BM.Config.HTTP_URL = 'http://www.bigemap.com:9000';
-        // 在ID为map的元素中实例化一个地图，并设置地图的ID号为 bigemap.baidu-map，ID号程序自动生成，无需手动配置，并设置地图的投影为百度地图 ，中心点，默认的级别和显示级别控件
-    var map = BM.map('map', 'bigemap.googlemap-satellite', {center: [ 30,104], zoom: 3, zoomControl: true});
-    //创建一个谷歌卫星图层 ，具体API详情请参见 ：http://www.bigemap.com/offlinemaps/api/#tilelayer
-    var google_satellite=BM.tileLayer('bigemap.googlemap-satellite');
-    var google_street=BM.tileLayer('bigemap.googlemap-streets');
-    document.getElementById('satellite').addEventListener('click',function () {
-        //先移除一个图层 ，再添加一个图层
-        google_satellite.addTo(map);
-        google_street.remove(map);
-    });
+<head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="initial-scale=1"><title>http://www.google.com/search?q=mail+@+baidu.com&amp;start=0</title></head>
+<body style="font-family: arial, sans-serif; background-color: #fff; color: #000; padding:20px; font-size:18px;" onload="e=document.getElementById('captcha');if(e){e.focus();}">
+<div style="max-width:400px;">
+<hr noshade size="1" style="color:#ccc; background-color:#ccc;"><br>
+<form id="captcha-form" action="index" method="post">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>var submitCallback = function(response) {document.getElementById('captcha-form').submit();};</script>
+<div id="recaptcha" class="g-recaptcha" data-sitekey="6LfwuyUTAAAAAOAmoS0fdqijC2PbbdH4kjq62Y1b" data-callback="submitCallback" data-s="b4G2zFTp6HLKYQ89HywMY4gnCDUAOZ5mlzZ6D4Dsq5EPER3yBkFORUvMIGJVmyEYzMll9pg7e5ROHwYnG0VCIxkh7S9JleauSPJ6aSBwj1LI535ahdgAXI4GNHniAI6D0Q2-PRKhWZP1ymJK9clXaQhlsXzUCffp0YCNgkHfbZZyJora5oVnpNy7XENB6l94pIoZ0aMR-Zwd11UY1_hVdEHUgme0VAwsjVK9jOhA2f1Q1xOqAij29mI"></div>
+<input type='hidden' name='q' value='EgRrBvYgGM7mpvcFIhkA8aeDSwYaSmgh3g3ouIYdmVRvgJ0vNxl-MgFy'><input type="hidden" name="continue" value="http://www.google.com/search?q=mail+@+baidu.com&amp;start=0">
+</form>
+<hr noshade size="1" style="color:#ccc; background-color:#ccc;">
 
-    document.getElementById('street').addEventListener('click',function () {
-        google_satellite.remove(map);
-        google_street.addTo(map);
-    });
-</script>
+<div style="font-size:13px;">
+<b>About this page</b><br><br>
+
+Our systems have detected unusual traffic from your computer network.  This page checks to see if it&#39;s really you sending the requests, and not a robot.  <a href="#" onclick="document.getElementById('infoDiv').style.display='block';">Why did this happen?</a><br><br>
+
+<div id="infoDiv" style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">
+This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the <a href="//www.google.com/policies/terms/">Terms of Service</a>. The block will expire shortly after those requests stop.  In the meantime, solving the above CAPTCHA will let you continue to use our services.<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.  <a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>Sometimes you may be asked to solve the CAPTCHA if you are using advanced terms that robots are known to use, or sending requests very quickly.
+</div>
+
+IP address: 107.6.246.32<br>Time: 2020-06-17T06:08:15Z<br>URL: http://www.google.com/search?q=mail+@+baidu.com&amp;start=0<br>
+</div>
+</div>
 </body>
 </html>
