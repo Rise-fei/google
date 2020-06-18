@@ -12,7 +12,7 @@ class CustLoginRecord(models.Model):
 
 
 class SearchResult(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=128)
     website = models.CharField(max_length=512,null=True)
     email = models.CharField(max_length=128,null=True)
     type = models.CharField(max_length=512,null=True)

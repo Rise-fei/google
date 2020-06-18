@@ -16,12 +16,33 @@ import requests
 # response_content = res.content.decode()
 # print(response_content)
 # print(res)
+import json
+headers = {
+    "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
+}
+lat = 116
+lng = 135
+radius = 50000
+word = '家具'
+print('当前搜索地点关键字无具体结果,即将搜索附近结果！')
+location = '%s,%s' % (lat, lng)
+radius = radius
+query = word
+key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
+language = 'zh-CN'
+# 第一次发送请求搜寻地点获取 地点id,方便后续地点详情使用。
+# url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?' \
+#       'query=%s&key=%s&language=%s&location=%s&radius=%s' % (query, key, language, location, radius)
 
+# url = 'http://www.google.com/search?q=mail+@+baidu.com&start=0'
+url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=35,116&radius=50000&type=restaurant&keyword=家具&key=%s' % key
+res = requests.get(url,headers=headers)
+# print(res,res.content.decode())
+data = res.content.decode()
+data = json.loads(data)
+with open('tststs.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
 
-
-url = 'http://www.google.com/search?q=mail+@+baidu.com&start=0'
-res = requests.get(url)
-print(res,res.content.decode())
 # l = [{
 #                 "long_name": "Chanute",
 #                 "short_name": "Chanute",

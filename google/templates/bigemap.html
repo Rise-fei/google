@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="/static/img/favicon.ico"/>
 
     <script type="text/javascript" src="/static/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.table2excel.js"></script>
     <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 
@@ -26,15 +27,16 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="http://sstrade.net/">晟时科技</a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    <li><a id="export_email" href="#">导出邮箱</a></li>
                     <li><a href="#">Link</a></li>
                     <li><a href="#">Link</a></li>
                     <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
+
                 </ul>
+
 
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">当前用户</a></li>
@@ -79,9 +81,9 @@
 
     {% csrf_token %}
     <div>
-        <table id="table-content" class="table table-bordered" style="z-index: 5;table-layout: fixed">
+        <table id="table-content" class="table table-bordered table2excel" style="z-index: 5;table-layout: fixed">
             <thead>
-            <th><input type="checkbox"><button id="search_detail" class="btn btn-default" type="button">详情查询</button></th>
+            <th style="width: 40px"><input type="checkbox"></th>
             <th>名称</th>
             <th>网址</th>
             <th>email</th>
@@ -92,11 +94,24 @@
             <th>Youtube</th>
             <th>Twitter</th>
             <th>搜索关键字</th>
+            <th style="width: 160px">
+                <button id="search_detail" class="btn btn-default" type="button">详情查询</button>
+                <button id="delete_data" class="btn btn-default" type="button">删除</button>
+            </th>
             </thead>
             <tbody id="table_content">
 
             </tbody>
         </table>
+    </div>
+
+    <div id="pro_bar" style="display:none;width: 100px;z-index: 10;position: fixed;top: 18px;left: 46%">
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -155,8 +170,8 @@
             var sw_positon = map.getBounds()._southWest
             var ne_postion = map.getBounds()._northEast
             var bottom_yy = map.latLngToContainerPoint(map.getBounds()._southWest).y
-            console.log(div_size_y, top_y, bottom_y,top_y-bottom_y);
-            var flag = (top_y < div_size_y || bottom_yy  < div_size_y);
+            console.log(div_size_y, top_y, bottom_y, top_y - bottom_y);
+            var flag = (top_y < div_size_y || bottom_yy < div_size_y);
             if (flag) {
                 console.log(11111111111);
                 map.flyTo(marker.getLatLng())
@@ -182,12 +197,14 @@
 
 </script>
 <script>
-    $.ajaxSetup({
+    /*
+    *     $.ajaxSetup({
 
-        async: false
+        async: false,
 
     });
-
+    * */
+    // 点击结果中的name，地图跳转！
     function click_a() {
         $('.search_result_name').click(function () {
             var lat = $(this).attr('lat');
@@ -199,20 +216,78 @@
         })
     }
 
-    function get_search_list( data_html) {
+    // 点击某一个具体的搜索详情
+    function click_search_detail() {
+        $('.search_detail_child').click(function () {
+            var id_list = [];
+            var id = $(this).parent().parent().attr('id')
+            id_list.push(id)
+            // 将id_list 变为json串
+            var ids = JSON.stringify(id_list)
+            var index = 0;
+            $('.progress-bar').css('width', 0);
+            $('#pro_bar').css('display', 'block')
+            var t3 = window.setInterval(function () {
+                if (index < 100) {
+                    index += 33;
+                    s = String(index) + '%'
+                    $('.progress-bar').css('width', s)
+                }
+                console.log(index)
+            }, 1000)
+
+            $.ajax({
+                url: '/search_detail_by_ids/?place_ids=' + ids,
+                type: 'get',
+                success: function (ret) {
+                    window.clearInterval(t3);
+                    $('.progress-bar').css('width', '100%');
+                    setTimeout(0.5);
+                    $('#pro_bar').css('display', 'none');
+                    // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+                    var data = ret.data;
+                    for (var i = 0; i < data.length; i++) {
+                        var place_id = data[i].pid
+                        var td_html = data[i].td_html
+                        // 根据place_id 找到之前的tr，然后替换为新的td_html
+                        var str_id = '#' + place_id;
+                        $(str_id).replaceWith(td_html)
+                    }
+                    click_a();
+
+                }
+            })
+
+        });
+    }
+
+
+    // 点击某一个具体的删除时
+    function click_delete() {
+        $('.delete_data_child').click(function () {
+            $(this).parent().parent().remove();
+        });
+    }
+
+
+    // 将后端拼接的html 放入当前页面！！
+    function get_search_list(data_html) {
         $('#table_content').append(data_html);
         click_a();
+        click_search_detail();
+        click_delete();
     }
 
 
     $(function () {
+        // 选择范围
         $('#select_meter').change(function () {
             {#alert(1);#}
             var radius = parseInt($('#select_meter').val());
             {#circle.setCenter(marker.getPosition())#}
             circle.setRadius(radius);
         })
-
+        // 精准搜索（已废弃）
         $('#search_button').click(function () {
             alert('正在进行精准搜索！')
             alert('请耐心等待，画面即将锁定！')
@@ -259,14 +334,28 @@
                 }
             })
         });
+        // 以当前坐标为中心，半径为radius 进行附近搜索。
         $('#search_button2').click(function () {
             alert('正在进行搜索附近！')
-            alert('请耐心等待，画面即将锁定！')
+            alert('请耐心等待！')
+
             var position = marker.getLatLng();
             var current_lat = position.lat;
             var current_lng = position.lng;
             var word = $('#pac-input').val();
             var radius = $('#select_meter').val();
+            var index = 0;
+            $('.progress-bar').css('width', 0)
+            $('#pro_bar').css('display', 'block')
+            t = window.setInterval(function () {
+                if (index < 100) {
+                    index += 13;
+                    s = String(index) + '%'
+                    $('.progress-bar').css('width', s)
+                }
+                console.log(index)
+            }, 1000)
+
             $.ajax({
                 url: '/search_word2/',
                 type: 'post',
@@ -278,66 +367,193 @@
                     'lng': current_lng,
                 },
                 success: function (ret) {
-                    if (ret.status == 0)
-                    {
-                        var datas = ret.data.results;
-                        get_search_list(ret.data_final_html)
-                    }
-                    /*{
-                        alert('查询到附近相关结果');
-                        var datas = ret.data.results;
-                        var data_html = ret.data_final_html;
-                        console.log(datas);
-                        get_search_list(datas, data_html)
+                    window.clearInterval(t);
+                    $('.progress-bar').css('width', '100%');
+                    setTimeout(function () {
+                        $('#pro_bar').css('display', 'none');
+                    }, 0.5);
 
-                    }*/
+                    if (ret.status == 0) {
+                        //var datas = ret.data.results;
+                        get_search_list(ret.data_final_html);
+                        window.setTimeout(function () {
+                            var flag = confirm('查询到附近相关结果,是否扩大搜索范围继续搜索？')
+                            if (flag) {
+                                var index = 0;
+                                $('.progress-bar').css('width', 0)
+                                $('#pro_bar').css('display', 'block')
+                                t4 = window.setInterval(function () {
+                                    if (index < 100) {
+                                        index += 5;
+                                        s = String(index) + '%'
+                                        $('.progress-bar').css('width', s)
+                                    }
+                                    console.log(index)
+                                }, 1000)
+                                $.ajax({
+                                    url: '/extra_search/',
+                                    type: 'post',
+                                    data: {
+                                        'word': word,
+                                        'radius': radius,
+                                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                                        'lat': current_lat,
+                                        'lng': current_lng,
+                                    },
+                                    success: function (ret) {
+                                        window.clearInterval(t4);
+                                        $('.progress-bar').css('width', '100%');
+                                          setTimeout(function () {
+                                                $('#pro_bar').css('display', 'none');
+                                            }, 0.5);
 
-                    else {
-                        alert('未查询到附近相关结果!')
+                                        if (ret.status == 1) {
+                                            get_search_list(ret.data_final_html)
+                                        } else {
+                                            alert(ret.msg)
+                                        }
+                                    }
+                                })
+                            } else {
+                            }
+                        }, 2000)
+                    } else {
+                        // 第一次就没搜到结果！！
+                        var flag2 = confirm('未查询到附近相关结果,是否扩大搜索范围？')
+                        if (flag2) {
+                            $.ajax({
+                                url: '/extra_search/',
+                                type: 'post',
+                                data: {
+                                    'word': word,
+                                    'radius': radius,
+                                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                                    'lat': current_lat,
+                                    'lng': current_lng,
+                                },
+                                success: function (ret) {
+                                    if (ret.status == 1) {
+                                        get_search_list(ret.data_final_html)
+                                    } else {
+                                        alert(ret.msg)
+                                    }
+                                }
+                            })
+                        } else {
+                        }
                     }
                 }
             })
         });
-        $('#search_detail').click(function () {
+
+        // 搜索所有选中td 的详情信息！！
+        $('#search_detail').click(function ()
+        {
+
             var li = $("input[class='data_td']:checked")
             var id_list = [];
-            for (var i=0;i<li.length;i++){
+            for (var i = 0; i < li.length; i++) {
                 // 将每一个勾选状态的 placeid 放到一个列表中
                 var id = $(li[i]).parent().parent().attr('id')
                 id_list.push(id)
             }
             // 将id_list 变为json串
             var ids = JSON.stringify(id_list)
+            var li_len = li.length; // 1个3 秒   一共  3 * l * x = 100  x = 100/5/l = 20/l    100/l
+            var index = 0;
+            $('.progress-bar').css('width', 0);
+            $('#pro_bar').css('display', 'block')
+            t2 = window.setInterval(function () {
+                if (index < 100) {
+                    index += 100 / li_len;
+                    s = String(index) + '%'
+                    $('.progress-bar').css('width', s)
+                }
+                console.log(index)
+            }, 3000)
+
             $.ajax({
-                url:'/search_detail_by_ids/?place_ids=' + ids,
-                type:'get',
-                success:function (ret) {
+                url: '/search_detail_by_ids/?place_ids=' + ids,
+                type: 'get',
+                success: function (ret) {
+                    window.clearInterval(t2);
+                    $('.progress-bar').css('width', '100%');
+                     setTimeout(function () {
+                        $('#pro_bar').css('display', 'none');
+                    }, 0.5);
                     // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
                     var data = ret.data;
-                    for (var i=0;i<data.length;i++){
+                    for (var i = 0; i < data.length; i++) {
                         var place_id = data[i].pid
                         var td_html = data[i].td_html
                         // 根据place_id 找到之前的tr，然后替换为新的td_html
                         var str_id = '#' + place_id;
                         $(str_id).replaceWith(td_html)
                     }
-
+                    // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
+                    click_a();
+                    click_search_detail();
+                    click_delete();
                 }
             })
         });
+        // 删除所选的 搜索结果！！！
+        $('#delete_data').click(function () {
+            $("input[class='data_td']:checked").parent().parent().remove();
+        });
+        // 控制全选和全不选！！！
         $('th input:checkbox').change(function () {
             var e = $(this)[0].checked;
-            if (e){
-                 $('input:checkbox').prop('checked',true);
-            }
-            else{
-                $('input:checkbox').prop('checked',false);
+            if (e) {
+                $('input:checkbox').prop('checked', true);
+            } else {
+                $('input:checkbox').prop('checked', false);
             }
         })
 
     })
 </script>
+<script>
+    $(function () {
+        $('#export_email').click(function () {
+            var li = $("input[class='data_td']:checked")
+            var final_email_str = "";
+            for (var i=0;i<li.length;i++){
+                var email_str = li.eq(i).parent().next().next().next().text()
+                if(email_str){
+                    var word = li.eq(i).parent().siblings().eq(-2).text();
+                    var final_str = word + '|' + email_str.replace(';','|') + '\n'
+                    final_email_str += final_str;
+                }
+            }
+            var a = $(this)[0]
+            a.href = 'data:attachment/csv,' + encodeURI(final_email_str);
+            a.target = '_blank';
+            a.download = 'email.csv';
+        })
+    })
+    $(function() {
+        $(".exportToExcel").click(function(e){
+            var table = $(this).prev('.table2excel');
+            if(table && table.length){
+                var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
+                $(table).table2excel({
+                    exclude: ".noExl",
+                    name: "Excel Document Name",
+                    filename: "myFileName" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
+                    fileext: ".xls",
+                    exclude_img: true,
+                    exclude_links: true,
+                    exclude_inputs: true,
+                    preserveColors: preserveColors
+                });
+            }
+        });
+
+    });
+</script>
 </body>
+</html>
 
 {#<script>#}
 {#    window.onbeforeunload = onunload_message;#}
@@ -371,4 +587,3 @@
 {#        return "您确定离开该网页吗？";#}
 {#    }#}
 {#</script>#}
-</html>
