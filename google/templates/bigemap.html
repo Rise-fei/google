@@ -31,10 +31,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a id="export_email" href="#">导出邮箱</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-
+{#                    <li><a href="#">Link</a></li>#}
+{#                    <li><a href="#">Link</a></li>#}
+{#                    <li><a href="#">Link</a></li>#}
                 </ul>
 
 
@@ -249,7 +248,7 @@
                     setTimeout(0.5);
                     $('#pro_bar').css('display', 'none');
                     // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
-                    if(data.code==1){
+
                          var data = ret.data;
                         for (var i = 0; i < data.length; i++) {
                             var place_id = data[i].pid
@@ -261,10 +260,8 @@
                        click_a();
                        // {#click_search_detail();#}
                        click_delete();
-                    }
-                    else {
-                        alert('该数据搜索失败！')
-                    }
+
+
                 }
             })
         });
@@ -511,7 +508,7 @@
                     type: 'get',
                     success: function (ret) {
                         index_list.push(1)
-                        if(ret.code==1){
+                        //if(ret.code==1){
                             // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
                             var data = ret.data;
                             for (var i = 0; i < data.length; i++) {
@@ -524,10 +521,10 @@
                             // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
                             click_a();
                             click_delete();
-                        }
-                        else {
-                            alert('有数据未能成功搜索！')
-                        }
+                       // }
+                       // else {
+                       //     alert('有数据未能成功搜索！')
+                       // }
                     }
                 })
             }

@@ -90,7 +90,7 @@ def tttt(request):
 
 def login_check(request):
     '''
-    登录校验：前端发送ajax，接收账号密码，然后向oa服务器发送登录请求，
+    登录校验：前端发送ajax，接收账号密码，然后向oa服务器发送登录请求
     如果登录成功：
         那么将username,is_login（True）存入当前session中。并且将oa登录成功保存的sessionkey拿过来保存在当前cookie中。
         添加登录信息至custloginrecord表中。
@@ -385,8 +385,9 @@ def search_detail(place_id,word):
         'data_html': data_html,
     }
     return ret
-
 """
+
+
 
 
 # 精准搜索 暂时不用！！
@@ -452,14 +453,14 @@ def search_detail(place_id, word, p_obj):
             <input class='data_td' type='checkbox'>
         </td>
         <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
-        <td><a href='%s'>%s</a></td>
+        <td><a href='%s' target="_blank">%s</a></td>
         <td><span>%s</span></td>
         <td><span>%s</span></td>
         <td><span>%s</span></td>
         <td><span>%s</span></td>
-        <td><a href='%s'>%s</a></td>
-        <td><a href='%s'>%s</a></td>
-        <td><a href='%s'>%s</a></td>
+        <td><a href='%s' target="_blank">%s</a></td>
+        <td><a href='%s' target="_blank">%s</a></td>
+        <td><a href='%s' target="_blank">%s</a></td>
         <td><span>%s</span></td>
         <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
         <button class="btn btn-default delete_data_child" type="button">删除</button></td>
