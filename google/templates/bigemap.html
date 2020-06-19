@@ -81,7 +81,7 @@
 
     {% csrf_token %}
     <div>
-        <table id="table-content" class="table table-bordered table2excel" style="z-index: 5;table-layout: fixed">
+        <table class="table table-bordered" style="z-index: 6;table-layout: fixed;position: fixed;background-color: white;">
             <thead>
             <th style="width: 40px"><input type="checkbox"></th>
             <th>名称</th>
@@ -95,10 +95,12 @@
             <th>Twitter</th>
             <th>搜索关键字</th>
             <th style="width: 160px">
-                <button id="search_detail" class="btn btn-default" type="button">详情查询</button>
+                <button id="search_detail" class="btn btn-default" type="button">搜索选中</button>
                 <button id="delete_data" class="btn btn-default" type="button">删除</button>
             </th>
             </thead>
+        </table>
+        <table class="table table-bordered" style="z-index: 1;top: 61px;position: relative;table-layout: fixed;">
             <tbody id="table_content">
 
             </tbody>
@@ -229,7 +231,7 @@
             var index = 0;
             $('.progress-bar').css('width', 0);
             $('#pro_bar').css('display', 'block')
-            var t3 = window.setInterval(function () {
+            t6 = window.setInterval(function () {
                 if (index < 100) {
                     index += 33;
                     s = String(index) + '%'
@@ -242,25 +244,29 @@
                 url: '/search_detail_by_ids/?place_ids=' + ids,
                 type: 'get',
                 success: function (ret) {
-                    window.clearInterval(t3);
+                    window.clearInterval(t6);
                     $('.progress-bar').css('width', '100%');
                     setTimeout(0.5);
                     $('#pro_bar').css('display', 'none');
                     // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
-                    var data = ret.data;
-                    for (var i = 0; i < data.length; i++) {
-                        var place_id = data[i].pid
-                        var td_html = data[i].td_html
-                        // 根据place_id 找到之前的tr，然后替换为新的td_html
-                        var str_id = '#' + place_id;
-                        $(str_id).replaceWith(td_html)
+                    if(data.code==1){
+                         var data = ret.data;
+                        for (var i = 0; i < data.length; i++) {
+                            var place_id = data[i].pid
+                            var td_html = data[i].td_html
+                            // 根据place_id 找到之前的tr，然后替换为新的td_html
+                            var str_id = '#' + place_id;
+                            $(str_id).replaceWith(td_html)
+                        }
+                       click_a();
+                       // {#click_search_detail();#}
+                       click_delete();
                     }
-                   click_a();
-                   // {#click_search_detail();#}
-                   click_delete();
+                    else {
+                        alert('该数据搜索失败！')
+                    }
                 }
             })
-
         });
     }
 
@@ -424,6 +430,14 @@
                         // 第一次就没搜到结果！！
                         var flag2 = confirm('未查询到附近相关结果,是否扩大搜索范围？')
                         if (flag2) {
+                            ttt = window.setInterval(function () {
+                                    if (index < 100) {
+                                        index += 5;
+                                        s = String(index) + '%'
+                                        $('.progress-bar').css('width', s)
+                                    }
+                                    console.log(index)
+                                }, 1000)
                             $.ajax({
                                 url: '/extra_search/',
                                 type: 'post',
@@ -435,6 +449,13 @@
                                     'lng': current_lng,
                                 },
                                 success: function (ret) {
+                                    window.clearInterval(ttt);
+                                    $('.progress-bar').css('width', '100%');
+                                      setTimeout(function () {
+                                            $('#pro_bar').css('display', 'none');
+                                        }, 0.5);
+
+
                                     if (ret.status == 1) {
                                         get_search_list(ret.data_final_html)
                                     } else {
@@ -459,11 +480,13 @@
             index_list = []
             $('.progress-bar').css('width', 0);
             $('#pro_bar').css('display', 'block')
-            var t2 = window.setInterval(function () {
+            t2 = window.setInterval(function () {
                     if (index_list.length < li_len) {
                         //   i    /  l         index/i = 100/l    index = 100 * i / l
                         //  index / 100
                         index = 100 * index_list.length / li_len
+                        if(index>100)
+                            index=100;
                         s = String(index) + '%'
                         $('.progress-bar').css('width', s)
                         console.log('**********' + index + '*********' + index_list)
@@ -488,18 +511,23 @@
                     type: 'get',
                     success: function (ret) {
                         index_list.push(1)
-                        // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
-                        var data = ret.data;
-                        for (var i = 0; i < data.length; i++) {
-                            var place_id = data[i].pid
-                            var td_html = data[i].td_html
-                            // 根据place_id 找到之前的tr，然后替换为新的td_html
-                            var str_id = '#' + place_id;
-                            $(str_id).replaceWith(td_html)
+                        if(ret.code==1){
+                            // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+                            var data = ret.data;
+                            for (var i = 0; i < data.length; i++) {
+                                var place_id = data[i].pid
+                                var td_html = data[i].td_html
+                                // 根据place_id 找到之前的tr，然后替换为新的td_html
+                                var str_id = '#' + place_id;
+                                $(str_id).replaceWith(td_html)
+                            }
+                            // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
+                            click_a();
+                            click_delete();
                         }
-                        // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
-                        click_a();
-                        click_delete();
+                        else {
+                            alert('有数据未能成功搜索！')
+                        }
                     }
                 })
             }

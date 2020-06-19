@@ -452,14 +452,14 @@ def search_detail(place_id, word, p_obj):
             <input class='data_td' type='checkbox'>
         </td>
         <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
-        <td><a>%s</a></td>
+        <td><a href='%s'>%s</a></td>
         <td><span>%s</span></td>
         <td><span>%s</span></td>
         <td><span>%s</span></td>
         <td><span>%s</span></td>
-        <td><span>%s</span></td>
-        <td><span>%s</span></td>
-        <td><span>%s</span></td>
+        <td><a href='%s'>%s</a></td>
+        <td><a href='%s'>%s</a></td>
+        <td><a href='%s'>%s</a></td>
         <td><span>%s</span></td>
         <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
         <button class="btn btn-default delete_data_child" type="button">删除</button></td>
@@ -472,9 +472,14 @@ def search_detail(place_id, word, p_obj):
     d_name = data_result.get('name', "")
     d_type = data_result.get('type', "")
     d_website = data_result.get('website', "")
-    d_email = get_email(d_website) if d_website else ""
+
     d_addr = data_result.get('formatted_address', "")
     d_phone = data_result.get('formatted_phone_number', "")
+
+    d_facebook = ""
+    d_youtube = ""
+    d_twitter = ""
+    d_email = ''
 
     if d_website:
         try:
@@ -482,15 +487,11 @@ def search_detail(place_id, word, p_obj):
             d_facebook = result['result']['facebook']
             d_youtube = result['result']['youtube']
             d_twitter = result['result']['twitter']
+            d_email = result['result']['mails']
+            if not d_email:
+                d_email = get_email(d_website)
         except:
-            d_facebook = ""
-            d_youtube = ""
-            d_twitter = ""
-    else:
-        d_facebook = ""
-        d_youtube = ""
-        d_twitter = ""
-
+            pass
 
     d_search_word = word
     d_address_components = data_result.get('address_components')
@@ -500,7 +501,10 @@ def search_detail(place_id, word, p_obj):
             d_country = i['long_name']
 
     data_html = data_html % (d_place_id, lat, lng,
-                             d_name, d_website, d_email, d_country, d_addr, d_phone, d_facebook, d_youtube, d_twitter,
+                             d_name, d_website,d_website, d_email, d_country, d_addr, d_phone,
+                             d_facebook, d_facebook,
+                             d_youtube,d_youtube,
+                             d_twitter,d_twitter,
                              d_search_word)
 
     p_obj.website = d_website
@@ -531,22 +535,28 @@ def search_detail(place_id, word, p_obj):
 
 
 def search_detail_by_ids(request):
-    ids = request.GET.get('place_ids')
-    id_list = json.loads(ids)
-    data_list = []
-    for id in id_list:
-        p_obj = SearchResult.objects.get(place_id=id)
-        if p_obj.status == 0:
-            # 说明只进行了第一层搜索，即将进行详情搜索！！！
-            # 搜索完详情，将详情信息更新到数据库中，并设置status = 1
-            word = p_obj.search_word
-            data_html = search_detail(id, word, p_obj)
-        else:
-            data_html = p_obj.td_html
-        data_list.append({'td_html': data_html, 'pid': id})
-    ret = {
-        'data': data_list,  # [{},{},{},{}]
-    }
+    try:
+        ids = request.GET.get('place_ids')
+        id_list = json.loads(ids)
+        data_list = []
+        for id in id_list:
+            p_obj = SearchResult.objects.get(place_id=id)
+            if p_obj.status == 0:
+                # 说明只进行了第一层搜索，即将进行详情搜索！！！
+                # 搜索完详情，将详情信息更新到数据库中，并设置status = 1
+                word = p_obj.search_word
+                data_html = search_detail(id, word, p_obj)
+            else:
+                data_html = p_obj.td_html
+            data_list.append({'td_html': data_html, 'pid': id})
+        ret = {
+            'data': data_list,  # [{},{},{},{}]
+            'code':1,
+        }
+    except:
+        ret = {
+            'code':0,
+        }
     return JsonResponse(ret)
 
 
@@ -698,7 +708,7 @@ def search_near_by(lat, lng, word, radius):
     return ret
 
 
-# 附近搜索
+# 附近搜索 程序入口
 def search_place_text2(request):
     # 获取地图中心的经纬度坐标
     lat = request.POST.get('lat')

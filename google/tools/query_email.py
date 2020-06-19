@@ -57,7 +57,7 @@ def add_data(data_results,SearchResult,word):
 def googlemail(kw):
     mailstart = 0
     while mailstart <= 20:
-        time.sleep(0.3)
+        time.sleep(0.2)
         searchurl = 'http://www.google.com/search?q={}&start={}'.format(kw, mailstart)
         print(searchurl)
         try:
@@ -73,6 +73,7 @@ def googlemail(kw):
                 break
         except Exception as e:
             print(e)
+
 
 def gettruest(mails):
     res = [i for item in mails for i in item]
@@ -152,16 +153,23 @@ def getContactUs(contactwebsite, fat):
     contacte = etree.HTML(contactResp)
     # fat = 1说明Facebook和Twitter信息没采集完全
     print(fat['result'].keys(), '=========================')
-    noget = [i for i in ['facebook', 'twitter', 'youtube'] if i not in fat['result'].keys()]
-    if 'facebook' in noget or 'twitter' in noget or 'youtube' in noget:
-        contactFAT = getFaceAndTwit(contacte)
-        contactface = contactFAT['result']['facebook']
-        contacttwit = contactFAT['result']['twitter']
-        contactyoutb = contactFAT['result']['youtube']
+    noget = [i for i in ['facebook', 'twitter', 'youtube','mails'] if i not in fat['result'].keys()]
+    contactFAT = getFaceAndTwit(contacte)
+    contactface = contactFAT['result']['facebook']
+    contacttwit = contactFAT['result']['twitter']
+    contactyoutb = contactFAT['result']['youtube']
+    if not fat['result']['facebook']:
         fat['result']['facebook'] = contactface
+    if not fat['result']['twitter']:
         fat['result']['twitter'] = contacttwit
+    if not fat['result']['youtube']:
         fat['result']['youtube'] = contactyoutb
         print(fat['result'])
+    if not fat['result']['mails']:
+        pam = getPaMFromHtml(contactResp)
+        if pam is not None:
+            if pam['mails']:
+                fat['result']['mails'] = pam['mails']
     return fat
 
 # 首先拿到公司网址的全链接，查看网址中是否有联系我们
@@ -176,11 +184,19 @@ def getWebSource(website):
     e = etree.HTML(res)
     # 捕获是否存在facebook和twitter，如果存在，给下一步一个信号不用捕获了，任何一个不存在则去联系我们找
     # 首页捕获的ft账号信息  {'count': 2, 'result': {'facebook': ['https://www.facebook.com/JohnLewisandPartners'], 'twitter': ['https://twitter.com/JLandPartners']}}
+    # 从公司官网搜索youtube、facebook、twitter等信息。
     fat = getFaceAndTwit(e)
     print('首次页面抓取结果：', fat)
-
+    # 从公司官网搜索邮箱
+    pam = getPaMFromHtml(res)
+    if pam != None:
+        if pam['mails']:
+            fat['result']['mails'] = pam['mails']
+            fat['count'] += 1
+    else:
+        fat['result']['mails'] = []
     print(fat)
-    if fat['count'] == 3:
+    if fat['count'] == 4:
         fat = dict(fat)
         return fat
     else:
@@ -199,7 +215,53 @@ def getWebSource(website):
     return fat
 
 
+def getPaMFromHtml(resp):
+    pat = re.compile('>(.*?)<')
+    s = ' '.join(pat.findall(resp))
+
+    mails = re.findall(r'([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z-.]+)', s)
+
+    mls = Counter(mails)
+    print('mailAll:', [mk for mk, mv in mls.items() if len(
+        mls.items()) > 5 and mv > 2 and '.jpg' not in mk and '.io' not in mk or mv and '.jpg' not in mk and '.io' not in mk])
+    mailAll = ';'.join([mk for mk, mv in mls.items() if len(
+        mls.items()) > 5 and mv > 2 and '.jpg' not in mk and '.io' not in mk or mv and '.jpg' not in mk and '.io' not in mk])
+    if len(mailAll) != 0:
+        return  {'mails': mailAll}
+    else:
+        return None
+
+# 当调用这个的时候从网站源码中获取邮箱和电话（website必须是完整链接）
+def getPaM(website):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'
+    }
+    try:
+        resp = requests.get(website, headers=headers, proxies=proxies)
+        # print(resp.text)
+        resp = resp.content.decode(resp.encoding)
+        pat = re.compile('>(.*?)<')
+        s = ' '.join(pat.findall(resp))
+
+        mails = re.findall(r'([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z-.]+)', s)
+
+        mls = Counter(mails)
+        print('mailAll:', [mk for mk, mv in mls.items() if len(
+            mls.items()) > 5 and mv > 2 and '.jpg' not in mk and '.io' not in mk or mv and '.jpg' not in mk and '.io' not in mk])
+        mailAll = ';'.join([mk for mk, mv in mls.items() if len(
+            mls.items()) > 5 and mv > 2 and '.jpg' not in mk and '.io' not in mk or mv and '.jpg' not in mk and '.io' not in mk])
+        mail = mailAll
+        if len(mailAll) != 0:
+            return mail
+        else:
+            return []
+    except:
+        return []
+
+
 if __name__ == '__main__':
-    url = 'https://www.scs.co.uk/sofas/fabric-sofas'
-    ret = getWebSource(url)
-    print(ret)
+    url = 'https://belfurniture.com/'
+    # ret = getWebSource(url)     #  从官网搜，没有的话找联系我们接着搜  'mails': 'customerlove@lovesac.com;corporatesales@lovesac.com;careers@lovesac.com'                【】
+    # print(ret)
+    # print(getPaM(url))          # 从官网搜      【】
+    print(get_email(url))         # 从谷歌搜索邮箱     prospectus@canaccordgenuity.com     【】
