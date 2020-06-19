@@ -26,5 +26,5 @@ headers = {
 proxies = {'http': 'http://lum-customer-sstrade-zone-residential-country-us:4xcrhdlj831p@zproxy.lum-superproxy.io:22225',
             'https': 'https://lum-customer-sstrade-zone-residential-country-us:4xcrhdlj831p@zproxy.lum-superproxy.io:22225'}
 
-res = requests.get(url='http://www.google.com/search?q=mail+@+freudenhaus-online.de&start=0',headers=headers,proxies=proxies)
+res = requests.get(url='http://www.google.com/search?q=mail+@+freudenhaus-online.de&start=0',headers=headers,timeout=0.1)
 print(res)

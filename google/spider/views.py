@@ -219,10 +219,11 @@ def search_word(request):
         print('没有搜索到具体位置')
 
     else:
-        path = settings.BASE_DIR + '\\json_data\\search_place\\' + word + '_place.json'
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        # path = settings.BASE_DIR + '\\json_data\\search_place\\' + word + '_place.json'
+        # with open(path, 'w', encoding='utf-8') as f:
+        #     json.dump(data, f, ensure_ascii=False, indent=4)
         # 获取第一次请求对应的响应中的地点id,然后发送 地点详情 请求。
+        pass
 
     try:
         place_id = data['candidates'][0]['place_id']
@@ -231,9 +232,9 @@ def search_word(request):
         res2 = requests.get(url2)
         json_str2 = res2.content.decode()
         data2 = json.loads(json_str2)
-        path = settings.BASE_DIR + '\json_data\\search_place_detail\\' + word + '_detail.json'
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data2, f, ensure_ascii=False, indent=4)
+        # path = settings.BASE_DIR + '\json_data\\search_place_detail\\' + word + '_detail.json'
+        # with open(path, 'w', encoding='utf-8') as f:
+        #     json.dump(data2, f, ensure_ascii=False, indent=4)
         data_result = data2['result']
         data_html = "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
         d_name = data_result.get('name', "")
@@ -276,9 +277,9 @@ def search_word(request):
         json_str = res.content.decode()
         # print(json_str)
         data = json.loads(json_str)
-        path = settings.BASE_DIR + '\\json_data\\search_place_nearby_list\\' + query + '_near_by_list.json'
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        # path = settings.BASE_DIR + '\\json_data\\search_place_nearby_list\\' + query + '_near_by_list.json'
+        # with open(path, 'w', encoding='utf-8') as f:
+        #     json.dump(data, f, ensure_ascii=False, indent=4)
 
         if len(data['results']) == 0:
             ret = {
@@ -412,9 +413,9 @@ def search_place_text(request):
         }
     else:
         # 搜索到具体位置了。
-        path = settings.BASE_DIR + '\\json_data\\search_place\\' + word + '_place.json'
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        # path = settings.BASE_DIR + '\\json_data\\search_place\\' + word + '_place.json'
+        # with open(path, 'w', encoding='utf-8') as f:
+        #     json.dump(data, f, ensure_ascii=False, indent=4)
         # 获取第一次请求对应的响应中的地点id,然后发送 地点详情 请求。
         try:
             # 获取第一次请求对应的响应中的地点id,然后发送 地点详情 请求,获取相应数据。
@@ -441,9 +442,9 @@ def search_detail(place_id, word, p_obj):
     json_str = res.content.decode()
     data = json.loads(json_str)
     # print(data)
-    path = settings.BASE_DIR + '\json_data\\search_place_detail\\' + word + '_detail.json'
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    # path = settings.BASE_DIR + '\json_data\\search_place_detail\\' + word + '_detail.json'
+    # with open(path, 'w', encoding='utf-8') as f:
+    #     json.dump(data, f, ensure_ascii=False, indent=4)
     data_result = data['result']
     data_html = '''
     <tr id='%s'>
@@ -474,9 +475,23 @@ def search_detail(place_id, word, p_obj):
     d_email = get_email(d_website) if d_website else ""
     d_addr = data_result.get('formatted_address', "")
     d_phone = data_result.get('formatted_phone_number', "")
-    d_facebook = data_result.get('facebook', "")
-    d_youtube = data_result.get('youtube', "")
-    d_twitter = data_result.get('twitter', "")
+
+    if d_website:
+        try:
+            result = getWebSource(d_website)
+            d_facebook = result['result']['facebook']
+            d_youtube = result['result']['youtube']
+            d_twitter = result['result']['twitter']
+        except:
+            d_facebook = ""
+            d_youtube = ""
+            d_twitter = ""
+    else:
+        d_facebook = ""
+        d_youtube = ""
+        d_twitter = ""
+
+
     d_search_word = word
     d_address_components = data_result.get('address_components')
     d_country = ""
@@ -608,9 +623,9 @@ def search_near_by(lat, lng, word, radius):
             print(next_page_token)
         print('*************************')
 
-        path = settings.BASE_DIR + '\\json_data\\search_place_nearby_list\\' + word + '_near_by_list.json'
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        # path = settings.BASE_DIR + '\\json_data\\search_place_nearby_list\\' + word + '_near_by_list.json'
+        # with open(path, 'w', encoding='utf-8') as f:
+        #     json.dump(data, f, ensure_ascii=False, indent=4)
         print(len(data['results']))
 
         # ******************

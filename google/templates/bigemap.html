@@ -196,6 +196,7 @@
 
 
 </script>
+
 <script>
     /*
     *     $.ajaxSetup({
@@ -209,8 +210,9 @@
         $('.search_result_name').click(function () {
             var lat = $(this).attr('lat');
             var lng = $(this).attr('lng');
+            console.log('click aa')
             marker.setLatLng({lat: lat, lng: lng});
-            {#map.setZoom(6);#}
+           // {#map.setZoom(6);#}
             map.panTo(marker.getLatLng())
             circle.setLatLng(marker.getLatLng())
         })
@@ -253,8 +255,9 @@
                         var str_id = '#' + place_id;
                         $(str_id).replaceWith(td_html)
                     }
-                    click_a();
-
+                   click_a();
+                   // {#click_search_detail();#}
+                   click_delete();
                 }
             })
 
@@ -451,51 +454,56 @@
         {
 
             var li = $("input[class='data_td']:checked")
-            var id_list = [];
+            var li_len = li.length;
+            var index = 0;
+            index_list = []
+            $('.progress-bar').css('width', 0);
+            $('#pro_bar').css('display', 'block')
+            var t2 = window.setInterval(function () {
+                    if (index_list.length < li_len) {
+                        //   i    /  l         index/i = 100/l    index = 100 * i / l
+                        //  index / 100
+                        index = 100 * index_list.length / li_len
+                        s = String(index) + '%'
+                        $('.progress-bar').css('width', s)
+                        console.log('**********' + index + '*********' + index_list)
+                    }
+                    else {
+                         $('#pro_bar').css('display', 'none');
+                         window.clearInterval(t2)
+                    }
+                    console.log('---------' + index)
+                }, 1000)
+
             for (var i = 0; i < li.length; i++) {
+                var id_list = [];
                 // 将每一个勾选状态的 placeid 放到一个列表中
                 var id = $(li[i]).parent().parent().attr('id')
                 id_list.push(id)
-            }
-            // 将id_list 变为json串
-            var ids = JSON.stringify(id_list)
-            var li_len = li.length; // 1个3 秒   一共  3 * l * x = 100  x = 100/5/l = 20/l    100/l
-            var index = 0;
-            $('.progress-bar').css('width', 0);
-            $('#pro_bar').css('display', 'block')
-            t2 = window.setInterval(function () {
-                if (index < 100) {
-                    index += 100 / li_len;
-                    s = String(index) + '%'
-                    $('.progress-bar').css('width', s)
-                }
-                console.log(index)
-            }, 3000)
-
-            $.ajax({
-                url: '/search_detail_by_ids/?place_ids=' + ids,
-                type: 'get',
-                success: function (ret) {
-                    window.clearInterval(t2);
-                    $('.progress-bar').css('width', '100%');
-                     setTimeout(function () {
-                        $('#pro_bar').css('display', 'none');
-                    }, 0.5);
-                    // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
-                    var data = ret.data;
-                    for (var i = 0; i < data.length; i++) {
-                        var place_id = data[i].pid
-                        var td_html = data[i].td_html
-                        // 根据place_id 找到之前的tr，然后替换为新的td_html
-                        var str_id = '#' + place_id;
-                        $(str_id).replaceWith(td_html)
+                   // 将id_list 变为json串
+                var ids = JSON.stringify(id_list)
+                {#var li_len = li.length; // 1个3 秒   一共  3 * l * x = 100  x = 100/5/l = 20/l    100/l#}
+                $.ajax({
+                    url: '/search_detail_by_ids/?place_ids=' + ids,
+                    type: 'get',
+                    success: function (ret) {
+                        index_list.push(1)
+                        // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+                        var data = ret.data;
+                        for (var i = 0; i < data.length; i++) {
+                            var place_id = data[i].pid
+                            var td_html = data[i].td_html
+                            // 根据place_id 找到之前的tr，然后替换为新的td_html
+                            var str_id = '#' + place_id;
+                            $(str_id).replaceWith(td_html)
+                        }
+                        // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
+                        click_a();
+                        click_delete();
                     }
-                    // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
-                    click_a();
-                    click_search_detail();
-                    click_delete();
-                }
-            })
+                })
+            }
+
         });
         // 删除所选的 搜索结果！！！
         $('#delete_data').click(function () {
@@ -522,7 +530,7 @@
                 var email_str = li.eq(i).parent().next().next().next().text()
                 if(email_str){
                     var word = li.eq(i).parent().siblings().eq(-2).text();
-                    var final_str = word + '|' + email_str.replace(';','|') + '\n'
+                    var final_str = word + '|' + email_str.replace(/;/g,'\n'+ word +'|') + '\n'
                     final_email_str += final_str;
                 }
             }
