@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GMS搜索记录</title>
     <script type="text/javascript" src="/static/js/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
@@ -133,11 +133,9 @@
                                 var str_id = '#' + place_id;
                                 $(str_id).replaceWith(td_html)
                             }
-                           click_a();
+                          // click_a();
                            // {#click_search_detail();#}
                            click_delete();
-
-
                     }
                 })
             }
@@ -207,12 +205,10 @@
                                     $(str_id).replaceWith(td_html)
                                 }
                                 // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
-                                click_a();
+                               // click_a();
                                 click_delete();
-                           // }
-                           // else {
-                           //     alert('有数据未能成功搜索！')
-                           // }
+
+
                         }
                     })
                 }

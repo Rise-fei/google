@@ -21,17 +21,18 @@
 <div id="main_content">
     <!-- 导航 -->
     <header>
-          <nav class="navbar navbar-inverse" style="z-index: 10">
+        <nav class="navbar navbar-inverse" style="z-index: 10">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-                   <a target="_blank"  href="http://sstrade.net/"><img src="/static/img/blogo.png"
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a target="_blank" href="http://sstrade.net/"><img src="/static/img/blogo.png"
                                                                        style="width: 130px;padding-top: 4px;"></a>
 
                 </div>
@@ -41,13 +42,14 @@
                     <ul class="nav navbar-nav navbar-">
                         <li><a id="export_email" href="#">导出邮箱</a></li>
                         <li><a href="/query_from_db/" target="_blank">数据库查询</a></li>
-    {#                    <li><a href="#">Link</a></li>#}
-    {#                    <li><a href="#">Link</a></li>#}
+                        {#                    <li><a href="#">Link</a></li>#}
+                        {#                    <li><a href="#">Link</a></li>#}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#">当前用户</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true"
                                aria-expanded="false">{{ request.session.username }} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 {#            <li><a href="#">Action</a></li>#}
@@ -61,7 +63,7 @@
             </div><!-- /.container-fluid -->
         </nav>
     </header>
-  
+
     <!-- map -->
     <div class="container" style="width: 100%;">
         <div class="row">
@@ -69,10 +71,11 @@
                 <div id='map'></div>
                 <div class="mapfixd">
                     <div class="mapserch">
-                         <!-- 搜索 -->
+                        <!-- 搜索 -->
                         <div id="info" class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
                             <button id="search_button2" class="btn btn-primary search—btn">附近查询</button>
-                            <button style="display: none" id="search_button" class="btn btn-info search—btn">具体查询</button>
+                            <button style="display: none" id="search_button" class="btn btn-info search—btn">具体查询
+                            </button>
                             <input type="text" id="pac-input" placeholder="请输入要查询的关键字">
                             <select id="select_meter">
                                 <option value="100">周围100米</option>
@@ -91,12 +94,12 @@
                             <p class="tool">
                                 <a id="street" class="btn btn-warning" href="javascript:void (0);">电子</a>
                                 <a id="satellite" class="btn btn-danger" href="javascript:void (0);">卫星</a>
-                                
+
                             </p>
                         </div>
                     </div>
                 </div>
-            </div>  
+            </div>
         </div>
     </div>
     {% csrf_token %}
@@ -231,19 +234,18 @@
             var lng = $(this).attr('lng');
             console.log('click aa')
             marker.setLatLng({lat: lat, lng: lng});
-           // {#map.setZoom(6);#}
+            // {#map.setZoom(6);#}
             map.panTo(marker.getLatLng())
             circle.setLatLng(marker.getLatLng())
         })
     }
 
     // 点击某一个具体的搜索详情
-     function click_search_detail() {
+    function click_search_detail() {
         $('.search_detail_child').click(function () {
-            if(flag_search_all){
+            if (flag_search_all) {
                 alert('请等待搜索任务执行完毕再操作！！！')
-            }
-            else {
+            } else {
                 flag_search_all = true
                 var id_list = [];
                 var id = $(this).parent().parent().attr('id')
@@ -271,22 +273,22 @@
                         $('.progress-bar').css('width', '100%');
                         setTimeout(function () {
                             $('#pro_bar').css('display', 'none');
-                        },500)
+                        }, 500)
                         flag_search_all = false
 
                         // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
 
-                             var data = ret.data;
-                            for (var i = 0; i < data.length; i++) {
-                                var place_id = data[i].pid
-                                var td_html = data[i].td_html
-                                // 根据place_id 找到之前的tr，然后替换为新的td_html
-                                var str_id = '#' + place_id;
-                                $(str_id).replaceWith(td_html)
-                            }
-                           click_a();
-                           // {#click_search_detail();#}
-                           click_delete();
+                        var data = ret.data;
+                        for (var i = 0; i < data.length; i++) {
+                            var place_id = data[i].pid
+                            var td_html = data[i].td_html
+                            // 根据place_id 找到之前的tr，然后替换为新的td_html
+                            var str_id = '#' + place_id;
+                            $(str_id).replaceWith(td_html)
+                        }
+                        click_a();
+                        // {#click_search_detail();#}
+                        click_delete();
 
 
                     }
@@ -370,53 +372,108 @@
         });
         // 以当前坐标为中心，半径为radius 进行附近搜索。
         $('#search_button2').click(function () {
-            alert('正在进行搜索附近！')
-            alert('请耐心等待！')
+            if (flag_search_all) {
+                alert('有任务未执行完毕，请等待任务执行结束！')
+            } else {
+                flag_search_all = true;
+                alert('正在进行搜索附近！')
+                alert('请耐心等待！')
 
-            var position = marker.getLatLng();
-            var current_lat = position.lat;
-            var current_lng = position.lng;
-            var word = $('#pac-input').val();
-            var radius = $('#select_meter').val();
-            var index = 0;
-            $('.progress-bar').css('width', 0)
-            $('#pro_bar').css('display', 'block')
-            t = window.setInterval(function () {
-                if (index < 100) {
-                    index += 13;
-                    s = String(index) + '%'
-                    $('.progress-bar').css('width', s)
-                }
-                console.log(index)
-            }, 1000)
+                var position = marker.getLatLng();
+                var current_lat = position.lat;
+                var current_lng = position.lng;
+                var word = $('#pac-input').val();
+                var radius = $('#select_meter').val();
+                var index = 0;
+                $('.progress-bar').css('width', 0)
+                $('#pro_bar').css('display', 'block')
+                t = window.setInterval(function () {
+                    if (index < 100) {
+                        index += 13;
+                        s = String(index) + '%'
+                        $('.progress-bar').css('width', s)
+                    }
+                    console.log(index)
+                }, 1000)
 
-            $.ajax({
-                url: '/search_word2/',
-                type: 'post',
-                data: {
-                    'word': word,
-                    'radius': radius,
-                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                    'lat': current_lat,
-                    'lng': current_lng,
-                },
-                success: function (ret) {
-                    window.clearInterval(t);
-                    $('.progress-bar').css('width', '100%');
-                    setTimeout(function () {
-                        $('#pro_bar').css('display', 'none');
-                    }, 0.5);
+                $.ajax({
+                    url: '/search_word2/',
+                    type: 'post',
+                    data: {
+                        'word': word,
+                        'radius': radius,
+                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                        'lat': current_lat,
+                        'lng': current_lng,
+                    },
+                    success: function (ret) {
+                        window.clearInterval(t);
+                        $('.progress-bar').css('width', '100%');
+                        setTimeout(function () {
+                            $('#pro_bar').css('display', 'none');
+                        }, 0.5);
+                        flag_search_all = false
+                        if (ret.status == 0) {
+                            //var datas = ret.data.results;
+                            get_search_list(ret.data_final_html);
+                            window.setTimeout(function () {
+                                var flag = confirm('查询到附近相关结果,是否扩大搜索范围继续搜索？')
+                                if (flag) {
+                                    if (flag_search_all) {
+                                        alert('有任务未执行完毕，请等待任务执行结束！')
+                                    } else {
+                                        flag_search_all = true
+                                        var index = 0;
+                                        $('.progress-bar').css('width', 0)
+                                        $('#pro_bar').css('display', 'block')
+                                        t4 = window.setInterval(function () {
+                                            if (index < 100) {
+                                                index += 5;
+                                                s = String(index) + '%'
+                                                $('.progress-bar').css('width', s)
+                                            }
+                                            console.log(index)
+                                        }, 1000)
+                                        $.ajax({
+                                            url: '/extra_search/',
+                                            type: 'post',
+                                            data: {
+                                                'word': word,
+                                                'radius': radius,
+                                                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                                                'lat': current_lat,
+                                                'lng': current_lng,
+                                            },
+                                            success: function (ret) {
+                                                window.clearInterval(t4);
+                                                $('.progress-bar').css('width', '100%');
+                                                setTimeout(function () {
+                                                    $('#pro_bar').css('display', 'none');
+                                                }, 0.5);
+                                                flag_search_all = false
+                                                if (ret.status == 1) {
+                                                    get_search_list(ret.data_final_html)
+                                                } else {
+                                                    alert(ret.msg)
+                                                }
+                                            }
+                                        })
+                                    }
 
-                    if (ret.status == 0) {
-                        //var datas = ret.data.results;
-                        get_search_list(ret.data_final_html);
-                        window.setTimeout(function () {
-                            var flag = confirm('查询到附近相关结果,是否扩大搜索范围继续搜索？')
-                            if (flag) {
-                                var index = 0;
-                                $('.progress-bar').css('width', 0)
-                                $('#pro_bar').css('display', 'block')
-                                t4 = window.setInterval(function () {
+                                } else {
+                                }
+                            }, 2000)
+                        } else {
+                            // 第一次就没搜到结果！！
+                            var flag2 = confirm('未查询到附近相关结果,是否扩大搜索范围？')
+                            if (flag2) {
+                                if(flag_search_all)
+                                {
+                                    alert('有任务未执行完毕，请等待任务执行完毕！')
+                                }
+                                else{
+                                    flag_search_all = true;
+                                    ttt = window.setInterval(function () {
                                     if (index < 100) {
                                         index += 5;
                                         s = String(index) + '%'
@@ -424,7 +481,7 @@
                                     }
                                     console.log(index)
                                 }, 1000)
-                                $.ajax({
+                                    $.ajax({
                                     url: '/extra_search/',
                                     type: 'post',
                                     data: {
@@ -435,11 +492,12 @@
                                         'lng': current_lng,
                                     },
                                     success: function (ret) {
-                                        window.clearInterval(t4);
+                                        window.clearInterval(ttt);
                                         $('.progress-bar').css('width', '100%');
-                                          setTimeout(function () {
-                                                $('#pro_bar').css('display', 'none');
-                                            }, 0.5);
+                                        setTimeout(function () {
+                                            $('#pro_bar').css('display', 'none');
+                                        }, 0.5);
+                                        flag_search_all = false
 
                                         if (ret.status == 1) {
                                             get_search_list(ret.data_final_html)
@@ -448,60 +506,20 @@
                                         }
                                     }
                                 })
+                                }
                             } else {
                             }
-                        }, 2000)
-                    } else {
-                        // 第一次就没搜到结果！！
-                        var flag2 = confirm('未查询到附近相关结果,是否扩大搜索范围？')
-                        if (flag2) {
-                            ttt = window.setInterval(function () {
-                                    if (index < 100) {
-                                        index += 5;
-                                        s = String(index) + '%'
-                                        $('.progress-bar').css('width', s)
-                                    }
-                                    console.log(index)
-                                }, 1000)
-                            $.ajax({
-                                url: '/extra_search/',
-                                type: 'post',
-                                data: {
-                                    'word': word,
-                                    'radius': radius,
-                                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                                    'lat': current_lat,
-                                    'lng': current_lng,
-                                },
-                                success: function (ret) {
-                                    window.clearInterval(ttt);
-                                    $('.progress-bar').css('width', '100%');
-                                      setTimeout(function () {
-                                            $('#pro_bar').css('display', 'none');
-                                        }, 0.5);
-
-
-                                    if (ret.status == 1) {
-                                        get_search_list(ret.data_final_html)
-                                    } else {
-                                        alert(ret.msg)
-                                    }
-                                }
-                            })
-                        } else {
                         }
                     }
-                }
-            })
+                })
+            }
         });
 
-          // 搜索所有选中td 的详情信息！！
-        $('#search_detail').click(function ()
-        {
-            if(flag_search_all){
+        // 搜索所有选中td 的详情信息！！
+        $('#search_detail').click(function () {
+            if (flag_search_all) {
                 alert('请等待搜索执行完毕后操作！！！')
-            }
-            else {
+            } else {
                 flag_search_all = true
                 var li = $("input[class='data_td']:checked")
                 var li_len = li.length;
@@ -510,30 +528,29 @@
                 $('.progress-bar').css('width', 0);
                 $('#pro_bar').css('display', 'block')
                 t2 = window.setInterval(function () {
-                        if (index_list.length < li_len) {
-                            //   i    /  l         index/i = 100/l    index = 100 * i / l
-                            //  index / 100
-                            index = 100 * index_list.length / li_len
-                            if(index>100)
-                                index=100;
-                            s = String(index) + '%'
-                            $('.progress-bar').css('width', s)
-                            console.log('**********' + index + '*********' + index_list)
-                        }
-                        else {
-                            flag_search_all = false
-                             $('#pro_bar').css('display', 'none');
-                             window.clearInterval(t2)
-                        }
-                        console.log('---------' + index)
-                    }, 1000)
+                    if (index_list.length < li_len) {
+                        //   i    /  l         index/i = 100/l    index = 100 * i / l
+                        //  index / 100
+                        index = 100 * index_list.length / li_len
+                        if (index > 100)
+                            index = 100;
+                        s = String(index) + '%'
+                        $('.progress-bar').css('width', s)
+                        console.log('**********' + index + '*********' + index_list)
+                    } else {
+                        flag_search_all = false
+                        $('#pro_bar').css('display', 'none');
+                        window.clearInterval(t2)
+                    }
+                    console.log('---------' + index)
+                }, 1000)
 
                 for (var i = 0; i < li.length; i++) {
                     var id_list = [];
                     // 将每一个勾选状态的 placeid 放到一个列表中
                     var id = $(li[i]).parent().parent().attr('id')
                     id_list.push(id)
-                       // 将id_list 变为json串
+                    // 将id_list 变为json串
                     var ids = JSON.stringify(id_list)
                     {#var li_len = li.length; // 1个3 秒   一共  3 * l * x = 100  x = 100/5/l = 20/l    100/l#}
                     $.ajax({
@@ -542,22 +559,22 @@
                         success: function (ret) {
                             index_list.push(1)
                             //if(ret.code==1){
-                                // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
-                                var data = ret.data;
-                                for (var i = 0; i < data.length; i++) {
-                                    var place_id = data[i].pid
-                                    var td_html = data[i].td_html
-                                    // 根据place_id 找到之前的tr，然后替换为新的td_html
-                                    var str_id = '#' + place_id;
-                                    $(str_id).replaceWith(td_html)
-                                }
-                                // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
-                                click_a();
-                                click_delete();
-                           // }
-                           // else {
-                           //     alert('有数据未能成功搜索！')
-                           // }
+                            // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+                            var data = ret.data;
+                            for (var i = 0; i < data.length; i++) {
+                                var place_id = data[i].pid
+                                var td_html = data[i].td_html
+                                // 根据place_id 找到之前的tr，然后替换为新的td_html
+                                var str_id = '#' + place_id;
+                                $(str_id).replaceWith(td_html)
+                            }
+                            // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
+                            click_a();
+                            click_delete();
+                            // }
+                            // else {
+                            //     alert('有数据未能成功搜索！')
+                            // }
                         }
                     })
                 }
@@ -586,11 +603,11 @@
         $('#export_email').click(function () {
             var li = $("input[class='data_td']:checked")
             var final_email_str = "";
-            for (var i=0;i<li.length;i++){
+            for (var i = 0; i < li.length; i++) {
                 var email_str = li.eq(i).parent().next().next().next().text()
-                if(email_str){
+                if (email_str) {
                     var word = li.eq(i).parent().siblings().eq(-2).text();
-                    var final_str = word + '|' + email_str.replace(/;/g,'\n'+ word +'|') + '\n'
+                    var final_str = word + '|' + email_str.replace(/;/g, '\n' + word + '|') + '\n'
                     final_email_str += final_str;
                 }
             }
@@ -600,10 +617,10 @@
             a.download = 'email.csv';
         })
     })
-    $(function() {
-        $(".exportToExcel").click(function(e){
+    $(function () {
+        $(".exportToExcel").click(function (e) {
             var table = $(this).prev('.table2excel');
-            if(table && table.length){
+            if (table && table.length) {
                 var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
                 $(table).table2excel({
                     exclude: ".noExl",
