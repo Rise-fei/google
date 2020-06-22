@@ -8,24 +8,37 @@
     <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='/static/css/query_db.css'/>
 </head>
-<body>
+<body  style="overflow-y:scroll;">
 <div class="container-fluid" id="div_1">
     <form class="form-inline">
         {% csrf_token %}
-     <div class="form-group">
-        <label for="query_word">查询已搜索的关键字记录：</label>
-         <input type="text"  class="form-control"  placeholder="请输入要查询的关键字" id="query_word">
-          <select class="form-control" id="select_country">
-            {% for country in country_list %}
-                {% if country.country %}
-                    <option value="{{ country.country }}">{{ country.country }}</option>
-                {% endif %}
-            {% endfor %}
+        <div class="form-group">
+            <label for="query_word">查询已搜索的关键字记录：</label>
+            <input type="text" class="form-control" placeholder="请输入要查询的关键字" id="query_word">
+            <select class="form-control" id="select_country">
+                <option value="all">全部数据</option>
+                <option value="all_detail">全部已搜索数据</option>
+                <option value="not_detail">全部未搜索数据</option>
+                {% for country in country_list %}
+                    {% if country.country %}
+                        <option value="{{ country.country }}">{{ country.country }}</option>
+                    {% endif %}
+                {% endfor %}
 
-        </select>
-     </div>
+            </select>
+        </div>
 
         <button id="query_btn" type="button" class="btn btn-primary">查询</button>
+        <a id="export_email" href="#" class="btn btn-warning">导出邮箱</a>
+        <div id="pro_bar" style="display:none;width: 100px;z-index: 10;position: fixed;top: 8px;left: 46%">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+
+                </div>
+            </div>
+
+        </div>
+
     </form>
     <table id="table_1" class="table table-bordered">
         <thead>
@@ -40,8 +53,9 @@
         <th>Youtube</th>
         <th>Twitter</th>
         <th>搜索关键字</th>
-        <th style="width: 100px;">
-            <button id="delete_data" class="btn btn-default" type="button">删除选中</button>
+        <th style="width: 160px;">
+            <button id="search_detail" class="btn btn-default" type="button">搜索选中</button>
+            <button id="delete_data" class="btn btn-default" type="button">删除</button>
         </th>
         </thead>
     </table>
@@ -55,24 +69,153 @@
 </div>
 
 <script>
-        function click_delete() {
-            $('.delete_data_child').click(function () {
-                $(this).parent().parent().remove();
-            });
-        }
-                // 删除所选的 搜索结果！！！
-        $('#delete_data').click(function () {
-            $("input[class='data_td']:checked").parent().parent().remove();
-        });
-        // 控制全选和全不选！！！
-        $('th input:checkbox').change(function () {
-            var e = $(this)[0].checked;
-            if (e) {
-                $('input[class="data_td"]:checkbox').prop('checked', true);
-            } else {
-                $('input[class="data_td"]:checkbox').prop('checked', false);
+     $('#export_email').click(function () {
+            var li = $("input[class='data_td']:checked")
+            var final_email_str = "";
+            for (var i=0;i<li.length;i++){
+                var email_str = li.eq(i).parent().next().next().next().text()
+                if(email_str){
+                    var word = li.eq(i).parent().siblings().eq(-2).text();
+                    var final_str = word + '|' + email_str.replace(/;/g,'\n'+ word +'|') + '\n'
+                    final_email_str += final_str;
+                }
             }
+            var a = $(this)[0]
+            a.href = 'data:attachment/csv,' + encodeURI(final_email_str);
+            a.target = '_blank';
+            a.download = 'email.csv';
+        })
+    // 点击某一个具体的搜索详情
+    function click_search_detail() {
+        $('.search_detail_child').click(function () {
+            var id_list = [];
+            var id = $(this).parent().parent().attr('id')
+            id_list.push(id)
+            // 将id_list 变为json串
+            var ids = JSON.stringify(id_list)
+            var index = 0;
+            $('.progress-bar').css('width', 0);
+            $('#pro_bar').css('display', 'block')
+            t6 = window.setInterval(function () {
+                if (index < 100) {
+                    index += 33;
+                    s = String(index) + '%'
+                    $('.progress-bar').css('width', s)
+                }
+                console.log(index)
+            }, 1000)
+
+            $.ajax({
+                url: '/search_detail_by_ids/?place_ids=' + ids,
+                type: 'get',
+                success: function (ret) {
+                    window.clearInterval(t6);
+                    $('.progress-bar').css('width', '100%');
+                    setTimeout(0.5);
+                    $('#pro_bar').css('display', 'none');
+                    // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+
+                    var data = ret.data;
+                    for (var i = 0; i < data.length; i++) {
+                        var place_id = data[i].pid
+                        var td_html = data[i].td_html
+                        // 根据place_id 找到之前的tr，然后替换为新的td_html
+                        var str_id = '#' + place_id;
+                        $(str_id).replaceWith(td_html)
+                    }
+                    click_a();
+                    // {#click_search_detail();#}
+                    click_delete();
+
+
+                }
+            })
         });
+    }
+
+    function click_delete() {
+        $('.delete_data_child').click(function () {
+            $(this).parent().parent().remove();
+        });
+    }
+
+     // 搜索所有选中td 的详情信息！！
+    $('#search_detail').click(function ()
+    {
+
+        var li = $("input[class='data_td']:checked")
+        var li_len = li.length;
+        var index = 0;
+        index_list = []
+        $('.progress-bar').css('width', 0);
+        $('#pro_bar').css('display', 'block')
+        t2 = window.setInterval(function () {
+                if (index_list.length < li_len) {
+                    //   i    /  l         index/i = 100/l    index = 100 * i / l
+                    //  index / 100
+                    index = 100 * index_list.length / li_len
+                    if(index>100)
+                        index=100;
+                    s = String(index) + '%'
+                    $('.progress-bar').css('width', s)
+                    console.log('**********' + index + '*********' + index_list)
+                }
+                else {
+                     $('#pro_bar').css('display', 'none');
+                     window.clearInterval(t2)
+                }
+                console.log('---------' + index)
+            }, 1000)
+
+        for (var i = 0; i < li.length; i++) {
+            var id_list = [];
+            // 将每一个勾选状态的 placeid 放到一个列表中
+            var id = $(li[i]).parent().parent().attr('id')
+            id_list.push(id)
+               // 将id_list 变为json串
+            var ids = JSON.stringify(id_list)
+            {#var li_len = li.length; // 1个3 秒   一共  3 * l * x = 100  x = 100/5/l = 20/l    100/l#}
+            $.ajax({
+                url: '/search_detail_by_ids/?place_ids=' + ids,
+                type: 'get',
+                success: function (ret) {
+                    index_list.push(1)
+                    //if(ret.code==1){
+                        // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
+                        var data = ret.data;
+                        for (var i = 0; i < data.length; i++) {
+                            var place_id = data[i].pid
+                            var td_html = data[i].td_html
+                            // 根据place_id 找到之前的tr，然后替换为新的td_html
+                            var str_id = '#' + place_id;
+                            $(str_id).replaceWith(td_html)
+                        }
+                        // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
+                        click_a();
+                        click_delete();
+                   // }
+                   // else {
+                   //     alert('有数据未能成功搜索！')
+                   // }
+                }
+            })
+        }
+
+    });
+
+    // 删除所选的 搜索结果！！！
+    $('#delete_data').click(function () {
+        $("input[class='data_td']:checked").parent().parent().remove();
+    });
+    // 控制全选和全不选！！！
+    $('th input:checkbox').change(function () {
+        var e = $(this)[0].checked;
+        if (e) {
+            $('input[class="data_td"]:checkbox').prop('checked', true);
+        } else {
+            $('input[class="data_td"]:checkbox').prop('checked', false);
+        }
+    });
 
     $(function () {
         $('#query_btn').click(function () {
@@ -91,9 +234,8 @@
                         alert(ret.msg);
                         {#console.log(ret.final_html)#}
                         $('#table_content').append(ret.data);
-                        $('#table_content tr td:last-child button:first-child').remove();
-                        $('#table_content tr td:last-child').css('text-align','center')
                         click_delete();
+                        click_search_detail();
                     } else {
                         alert(ret.msg)
                     }

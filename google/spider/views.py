@@ -25,13 +25,24 @@ def query_from_db(request):
     else:
         word = request.POST.get('word')
         country = request.POST.get('country')
+
         print(word,country)
-        res = SearchResult.objects.all().filter(search_word=word,country=country)
-        final_html = ''
-        for data in res:
-            final_html += data.td_html
-        print(final_html)
+        if country == 'all':
+            # 查询全部数据
+            res = SearchResult.objects.all().filter(search_word=word).order_by('status').order_by('country')
+        elif country == 'all_detail':
+            # 查询全部已经搜索的数据
+            res = SearchResult.objects.all().filter(search_word=word,status=1).order_by('country')
+        elif country == 'not_detail':
+            # 查询全部未搜索的数据
+            res = SearchResult.objects.all().filter(search_word=word,status=0).order_by('country')
+        else:
+            # 查询某个国家的搜索数据！！！
+            res = SearchResult.objects.all().filter(search_word=word,country=country)
         if res:
+            final_html = ''
+            for data in res:
+                final_html += data.td_html
             ret = {
                 'code':1,
                 'msg':'查询到结果',
@@ -51,8 +62,8 @@ def bigemap(request):
 
 
 def offline(request):
-    product = 1  # 后续改进
-    version = '3.2'  # 后续改进
+    product = settings.PRODUCT  # 后续改进
+    version = settings.VERSION  # 后续改进
     username = request.POST.get('username')
     password = request.POST.get('password')
     try:
@@ -130,8 +141,8 @@ def login_check(request):
     '''
     username = request.POST.get('username')
     password = request.POST.get('password')
-    product = 1  # 后续改进
-    version = '3.2'  # 后续改进
+    product = settings.PRODUCT  # 后续改进
+    version = settings.VERSION  # 后续改进
     print(username)
     print(password)
     url = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=%s&version=%s' % (
@@ -519,8 +530,8 @@ def search_detail(place_id, word, p_obj):
             d_email = result['result']['mails']
             if not d_email:
                 d_email = get_email(d_website)
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     d_search_word = word
     d_address_components = data_result.get('address_components')
@@ -582,7 +593,8 @@ def search_detail_by_ids(request):
             'data': data_list,  # [{},{},{},{}]
             'code':1,
         }
-    except:
+    except Exception as e:
+        print(e)
         ret = {
             'code':0,
         }

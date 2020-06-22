@@ -12,9 +12,9 @@ class CustLoginRecord(models.Model):
 class SearchResult(models.Model):
     name = models.CharField(max_length=128)
     website = models.CharField(max_length=512,null=True)
-    email = models.CharField(max_length=128,null=True)
+    email = models.CharField(max_length=256,null=True)
     type = models.CharField(max_length=512,null=True)
-    address = models.CharField(max_length=128,null=True)
+    address = models.CharField(max_length=256,null=True)
     phone = models.CharField(max_length=32,null=True)
     facebook = models.CharField(max_length=128,null=True)
     youtube = models.CharField(max_length=128,null=True)
