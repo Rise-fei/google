@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>Home</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400" rel="stylesheet">
+
+<link rel="stylesheet" href="/static/assets/css/bootstrap/bootstrap.css">
+<link rel="stylesheet" href="/static/assets/fonts/ionicons/css/ionicons.min.css">
+<link rel="stylesheet" href="/static/assets/fonts/law-icons/font/flaticon.css">
+
+<link rel="stylesheet" href="/static/assets/fonts/fontawesome/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/static/assets/css/slick.css">
+<link rel="stylesheet" href="/static/assets/css/slick-theme.css">
+
+<link rel="stylesheet" href="/static/assets/css/helpers.css">
+<link rel="stylesheet" href="/static/assets/css/style.css">
+<link rel="stylesheet" href="/static/assets/css/landing-2.css">
+</head>
+<body data-spy="scroll" data-target="#pb-navbar" data-offset="200">
+
+<nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar" style="padding-top: 0px;"> 
+  <div class="container" style="max-width: 100%">
+	<a class="navbar-brand" href="index.html"><img src="/static/assets/images/blogo.png" style="max-width: 200px;"></a>
+	<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+	  <span><i class="ion-navicon"></i></span>
+	</button>
+	<div class="collapse navbar-collapse" id="probootstrap-navbar">
+	  <ul class="navbar-nav ml-auto">
+		<li class="nav-item"><a class="nav-link" href="#section-home">官网</a></li>
+		<li class="nav-item"><a class="nav-link" href="#section-features">更新信息</a></li>
+<!-- 		<li class="nav-item"><a class="nav-link" href="#section-reviews"></a></li>
+		<li class="nav-item"><a class="nav-link" href="#section-pricing"></a></li>
+		<li class="nav-item"><a class="nav-link" href="#section-faq"></a></li> -->
+		<!-- <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="" target="_blank"><span class="pb_rounded-4 px-4">Get Started</span></a></li> -->
+	  </ul>
+	</div>
+  </div>
+</nav>
+<!-- END nav -->
+<section class="pb_cover_v3 overflow-hidden cover-bg-indigo cover-bg-opacity text-left pb_gradient_v1 pb_slant-light" id="section-home">
+  <div class="container">
+	<div class="row align-items-center justify-content-center">
+	  <div class="col-md-6">
+		<h3 class="heading mb-1">一款强大的外贸开发系统</h3>
+		<div class="sub-heading">
+		  <p class="mb-4">还在为做外贸找不到客户而一筹莫展么？试试我们这款，基于谷歌地图的定点搜索，获取更多国外有待开发的客户，精准抓取国外潜在客户信息，为您的外贸之路铺下最坚实的路！</p>
+		  <!-- <p class="mb-5"><a class="btn btn-success btn-lg pb_btn-pill smoothscroll" href="#section-pricing"><span class="pb_font-14 text-uppercase pb_letter-spacing-1">See Pricing</span></a></p> -->
+		</div>
+	  </div> 
+	  <div class="col-md-1">
+	  </div>
+	  <div class="col-md-5 relative align-self-center">
+		
+		<form class="bg-white rounded pb_form_v1">
+              {% csrf_token %}
+		  <h2 class="mb-4 mt-0 text-center">GMS外贸开发系统</h2>
+		  <div class="form-group">
+			<input type="text" class="form-control pb_height-50 reverse" placeholder="用户名" id="username">
+		  </div>
+		  <div class="form-group">
+			<input type="password" class="form-control pb_height-50 reverse" placeholder="密码" id="password">
+		  </div>
+		  <div class="form-group">
+			<input type="button" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" onclick="login()" value="登录">
+		  </div>
+		</form>
+
+	  </div> 
+	</div>
+  </div>
+</section>
+<!-- END section -->
+<footer class="footer-area section-gap" style="padding-top: 20px; ">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-5 col-md-6 col-sm-6">
+				<div class="single-footer-widget">
+					<h5>关于我们</h5>
+					<p>
+						　上海晟时信息科技有限公司是一家专注于外贸客户开发与服务的高科技企业。公司经过多年的外贸行业积累和专业技术团队研发，以帮助中国企业开拓国际市场为目标，服务中国外贸企业。
+					</p>	
+				</div>
+			</div>
+			<div class="col-lg-4  col-md-6 col-sm-6">
+				<div class="single-footer-widget">
+					<h5>企业愿景</h5>
+					<p>打造外贸拓客软件第一品牌，成为受人尊敬的世界级企业！</p>
+					<p>成就员工梦想，创造客户体验，领航中国制造走向世界！</p>
+					<p>为客户创造价值是我们永恒的追求。</p>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6 col-sm-6 social-widget">
+				<div class="single-footer-widget">
+					<h5>联系我们</h5>
+					<p style="color: #ff9500;font-weight: 600;margin-bottom: 10px;">外贸服务热线：400-021-0658</p>
+					<div class="footer-social d-flex align-items-center">
+						<a href="mqqwpa://im/chat?chat_type=wpa&amp;uin=1196956514&amp;version=1&amp;src_type=web&amp;web_src=oicqzone.com"><i class="fa fa-qq"></i></a>
+						<a href="https://wx.qq.com/"><i class="fa fa-weixin"></i></a>
+						<a href="https://mail.163.com/" target="_blank">
+                        	<i class="fa fa-envelope" aria-hidden="true"></i>
+                    	</a>
+						 <a href="https://weibo.com/" target="_blank">
+                        	<i class="fa fa-weibo" aria-hidden="true"></i>
+                    	</a>
+					</div>
+				</div>
+			</div>
+								
+		</div>
+	</div>
+		<div style="padding-top: 10px;">
+		<p class="footer-text">Copyright@2019 版权所有：上海晟时信息科技有限公司　沪ICP备18009208号</p>
+	</div>	
+</footer>
+<style type="text/css">
+	footer{
+		background-color: #f2f4f9
+	}
+	.single-footer-widget{
+		padding-top: 20px;
+	}
+	.single-footer-widget h5{
+		color: #333;
+    margin-bottom: 25px;
+    font-size: 18px;
+    font-weight: 600;
+	}
+	.single-footer-widget p{
+		font-size: 14px;
+		margin-bottom: 0px;
+		color: #000;
+	}
+	.footer-social  a{
+		padding-right: 25px;
+	}
+	.footer-social  a i{
+		color: #1d82ff;
+	}
+	.footer-text{
+		text-align: center;
+		font-size: 14px;
+		margin: 0px;
+		padding: 1rem 0 1rem 0;
+		color: #fff;
+		background-color: #1d82ff;
+	}
+	.footer-text:before{
+		/* background: #665fee; */
+  /* Old browsers */
+  background: -moz-linear-gradient(45deg, #665fee 0%, #27c2de 100%);
+  /* FF3.6-15 */
+  /* background: -webkit-linear-gradient(45deg, #665fee 0%, #27c2de 100%); */
+  /* Chrome10-25,Safari5.1-6 */
+  background: -o-linear-gradient(45deg, #665fee 0%, #27c2de 100%);
+  background: linear-gradient(45deg, #665fee 0%, #27c2de 100%);
+  
+	}
+</style>
+
+<script src="/static/assets/js/jquery.min.js"></script>
+
+<script src="/static/assets/js/popper.min.js"></script>
+<script src="/static/assets/js/bootstrap.min.js"></script>
+<script src="/static/assets/js/slick.min.js"></script>
+<script src="/static/assets/js/jquery.mb.YTPlayer.min.js"></script>
+
+<script src="/static/assets/js/jquery.waypoints.min.js"></script>
+<script src="/static/assets/js/jquery.easing.1.3.js"></script>
+
+<script src="/static/assets/js/main.js"></script>
+
+<script src="/static/js/jquery-3.5.1.min.js"></script>
+<script>
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        {#var checkbox = document.getElementById('checkbox').checked;#}
+        console.log(username);
+        console.log(password);
+        $.ajax({
+            url: '/login_check/',
+            type: 'post',
+            data: "username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + "{{ csrf_token }}",
+            success: function (ret) {
+                if(ret.status==1){
+                    location.href = '/bigemap/'
+                }
+                else if(ret.status==0){
+                    var flag = confirm(ret.msg + ',确认登录会下线其他终端用户（最早登录的终端），确认吗？')
+                    if (flag){
+                        $.ajax({
+                            url:'/offline/',
+                            type:'post',
+                            data: "username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + "{{ csrf_token }}",
+                            success:function (ret) {
+                                if(ret.code==1)
+                                {
+                                    alert('下线成功，点击跳转')
+                                    location.href = '/bigemap/'
+                                }
+                                else{
+                                    alert('下线失败，请联系管理员进行操作！')
+                                }
+                            }
+                        })
+                    }
+                    else{
+                        alert(ret.msg)
+                    }
+
+                }
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

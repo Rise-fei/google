@@ -120,7 +120,7 @@ def offline(request):
 
 
 def login(request):
-    return render(request, 'login_backup.html')
+    return render(request, 'login_log.html')
 
 
 def tttt(request):

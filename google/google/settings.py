@@ -24,7 +24,8 @@ SECRET_KEY = '2go2*wxur12j7b6j5-z6n#+237%!6vqo23&2n%zx)=6=_ycs9-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = False
+# DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -49,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'spider.middleware.LoginCheckMiddleware'
+    # 'spider.middleware.LoginCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'google.urls'
@@ -128,6 +129,6 @@ VERSION = '1.0'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+# STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # 部署更改如下： 1.debug  2. static file   3. middleware    4.tools->proxies

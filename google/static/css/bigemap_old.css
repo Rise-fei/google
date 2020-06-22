@@ -13,6 +13,7 @@ input[type=checkbox] {
 }
 td {
     overflow:hidden;
+    /*white-space:nowrap;*/
     width:100%;
     text-overflow:ellipsis;
 }
@@ -22,19 +23,18 @@ td {
     margin-bottom: 0 !important;
     z-index: 10;
     width: 100%;
-    min-height: 50px;
 }
 
 .dropdown-menu li{
     z-index: 100;
 }
 
-header{
-    min-height: 50px;
-}
+
 #map {
+    position: fixed;
+    top: 52px;
     width: 100%;
-    height:100%;
+    height: 500px;
     border: 1px solid #66afe9;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
 }
@@ -48,41 +48,33 @@ table tr td:last-child {
     width: 160px!important;
 }
 
-.tool a{
-    float: right;
-    margin-right: 10px;
+.tool {
+    top: 70px;
+    position: fixed;
+    z-index: 9;
+    right: 10px;
 }
-.mapfixd{
-    position: absolute;
-    top: 20px;
-    margin:0 auto;
-}
-.mapfixd{
-    width: 100%;
-}
-.mapserch{
-    overflow: hidden;
-    max-width: 1100px;
-    margin:0 auto;
-}
+
 #info {
+    top: 70px;
+    width: 700px;
+    position: fixed;
+    left: 43%;
     z-index: 10;
+    margin-left: -170px;
     color: #155724;
     background-color: #d4edda;
     padding: .75rem 1.25rem;
     margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: .25rem;
-
 }
-
-
 
 input {
     border: 1px solid #ccc;
     padding: 7px 5px;
     display: inline-block;
-    width: 65%;
+    width: 440px;
     height: 34px;
     border-radius: 3px;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
@@ -96,7 +88,7 @@ select {
     border: 1px solid #ccc;
     padding: 7px 5px;
     display: inline-block;
-    width: 19%;
+    width: 120px;
     border-radius: 3px;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
@@ -104,7 +96,6 @@ select {
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     float: right;
-   margin-right: 5px;
 }
 
 input:focus {
@@ -116,91 +107,4 @@ input:focus {
 
 .search—btn {
     float: right;
-}
-.tool{
-    overflow: hidden;
-    display: flex;
-     flex-direction:row-reverse;
-}
-
-table{
-    table-layout: fixed;
-}
-.tablebox{
-    position: relative;
-    max-height: 500px;
-    overflow-y: auto;
-}
-
-.tablebox::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
-}
-
-.tablebox {
-  scrollbar-width: none; /* firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.box2{
-    top: 62px;
-}
-@media (max-width: 768px){
-    input{
-        width: 100%;
-        margin: 5px 0 5px 0;
-    }
-    .search—btn{
-        float: none;
-    }
-    select{
-        width: 50%;
-        float: none;
-    }
-    #info{
-        border-radius: 0;
-        background-color: rgb(212, 237, 218,.7)
-    }
-    .tool{
-          justify-content:center;
-    }
-    .tool a{
-      width: 40%
-    }
-    .btn{
-        padding: 4px 10px;
-    }
-    select{
-        padding: 4px 5px;
-    }
-    input{
-        height: 30px;
-    }
-    table{
-    table-layout: auto;
-}
-    .tablebox{
-       overflow-y: auto;
-       overflow-x:auto;
-       min-height: 120px;
-    }
-    .search_detail_child,.delete_data_child{
-        width: 100%;
-        margin-top: 5px;
-        display: block;
-    }
-    .box2{
-    top: 114px;
-}
-}
-.box1{
-    position: absolute;
-}
-@media (min-width: 992px){
-    body{
-        overflow: hidden;
-    }
-    .box1{
-        position: fixed;
-    }
 }

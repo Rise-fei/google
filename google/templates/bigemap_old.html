@@ -14,94 +14,73 @@
     <link href='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet'/>
     <link rel='stylesheet' href='/static/css/bigemap.css'/>
     <script src='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.js'></script>
+
     <title>GMS外贸系统</title>
 </head>
 <body>
 
+
 <div id="main_content">
-    <!-- 导航 -->
-    <header>
-          <nav class="navbar navbar-inverse" style="z-index: 10">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-                   <a target="_blank"  href="http://sstrade.net/"><img src="/static/img/blogo.png"
-                                                                       style="width: 130px;padding-top: 4px;"></a>
+    <nav class="navbar navbar-inverse" style="z-index: 10">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" target="_blank"  href="http://sstrade.net/">晟时科技</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a id="export_email" href="#">导出邮箱</a></li>
+                    <li><a href="/query_from_db/" target="_blank">数据库查询</a></li>
+{#                    <li><a href="#">Link</a></li>#}
+{#                    <li><a href="#">Link</a></li>#}
+                </ul>
 
-                </div>
 
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-">
-                        <li><a id="export_email" href="#">导出邮箱</a></li>
-                        <li><a href="/query_from_db/" target="_blank">数据库查询</a></li>
-    {#                    <li><a href="#">Link</a></li>#}
-    {#                    <li><a href="#">Link</a></li>#}
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">当前用户</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">{{ request.session.username }} <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                {#            <li><a href="#">Action</a></li>#}
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">当前用户</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">{{ request.session.username }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {#            <li><a href="#">Action</a></li>#}
 
-                                {#            <li role="separator" class="divider"></li>#}
-                                <li><a href="/logout/">注销</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-        </nav>
-    </header>
-  
-    <!-- map -->
-    <div class="container" style="width: 100%;">
-        <div class="row">
-            <div style="height: 552px;position: relative;z-index: 8">
-                <div id='map'></div>
-                <div class="mapfixd">
-                    <div class="mapserch">
-                         <!-- 搜索 -->
-                        <div id="info" class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
-                            <button id="search_button2" class="btn btn-primary search—btn">附近查询</button>
-                            <button style="display: none" id="search_button" class="btn btn-info search—btn">具体查询</button>
-                            <input type="text" id="pac-input" placeholder="请输入要查询的关键字">
-                            <select id="select_meter">
-                                <option value="100">周围100米</option>
-                                <option value="500">周围500米</option>
-                                <option value="1000">周围1公里</option>
-                                <option value="5000">周围5公里</option>
-                                <option value="10000">周围10公里</option>
-                                <option selected value="50000">周围50公里</option>
-                            </select>
-                            <div id="result">
+                            {#            <li role="separator" class="divider"></li>#}
+                            <li><a href="/logout/">注销</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div style="height: 552px;position: relative;z-index: 8">
+        <p class="tool">
+            <a id="satellite" class="btn btn-danger" href="javascript:void (0);">卫星</a>
+            <a id="street" class="btn btn-warning" href="javascript:void (0);">电子</a>
+        </p>
+        <div id='map'></div>
+        <div id="info">
+            <button id="search_button2" class="btn btn-primary search—btn">附近查询</button>
+            <button style="display: none" id="search_button" class="btn btn-info search—btn">具体查询</button>
+            <input type="text" id="pac-input" placeholder="请输入要查询的关键字">
+            <select id="select_meter">
+                <option value="100">周围100米</option>
+                <option value="500">周围500米</option>
+                <option value="1000">周围1公里</option>
+                <option value="5000">周围5公里</option>
+                <option value="10000">周围10公里</option>
+                <option selected value="50000">周围50公里</option>
+            </select>
+            <div id="result">
 
-                            </div>
-                        </div>
-                        <!-- 按钮 -->
-                        <div class="weixing col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                            <p class="tool">
-                                <a id="street" class="btn btn-warning" href="javascript:void (0);">电子</a>
-                                <a id="satellite" class="btn btn-danger" href="javascript:void (0);">卫星</a>
-                                
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>  
+            </div>
         </div>
+
     </div>
+
     {% csrf_token %}
-    <div class="tablebox">
-        <table class="table table-bordered box1" style="z-index: 6; background-color: white;">
+    <div>
+        <table class="table table-bordered" style="z-index: 6;table-layout: fixed;position: fixed;background-color: white;">
             <thead>
             <th style="width: 40px"><input type="checkbox"></th>
             <th>名称</th>
@@ -120,20 +99,24 @@
             </th>
             </thead>
         </table>
-
-        <table class="table table-bordered box2" style="z-index: 1;position: relative;">
+        <table class="table table-bordered" style="z-index: 1;top: 61px;position: relative;table-layout: fixed;">
             <tbody id="table_content">
 
             </tbody>
         </table>
     </div>
+
     <div id="pro_bar" style="display:none;width: 100px;z-index: 10;position: fixed;top: 18px;left: 46%">
         <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+
             </div>
         </div>
+
     </div>
+
 </div>
+
 <script>
 
     //软件配置信息地址
@@ -238,7 +221,7 @@
     }
 
     // 点击某一个具体的搜索详情
-     function click_search_detail() {
+    function click_search_detail() {
         $('.search_detail_child').click(function () {
             if(flag_search_all){
                 alert('请等待搜索任务执行完毕再操作！！！')
@@ -495,7 +478,7 @@
             })
         });
 
-          // 搜索所有选中td 的详情信息！！
+        // 搜索所有选中td 的详情信息！！
         $('#search_detail').click(function ()
         {
             if(flag_search_all){
