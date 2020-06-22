@@ -1,0 +1,53 @@
+
+body {
+    margin: 0;
+    padding: 0;
+}
+#div_1{
+    position: fixed;
+    background-color: white;
+    z-index: 6;
+}
+#div_2{
+    position: relative;
+    top: 110px;
+    z-index: 1;
+}
+#table_1{
+    background-color: white;z-index: 6;table-layout: fixed;
+}
+#table_2{
+    z-index: 1;table-layout: fixed;
+}
+input[type=checkbox] {
+    width: 20px;
+}
+.table>thead>tr>th {
+    vertical-align: middle;
+    text-align: center;
+}
+td {
+    overflow:hidden;
+    /*white-space:nowrap;*/
+    width:100%;
+    text-overflow:ellipsis;
+    text-align: center;
+}
+
+table tr td:nth-child(1) {
+    width: 40px!important;
+}
+table tr td:last-child {
+    width: 90px!important;
+}
+
+input:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
+}
+
+.search—btn {
+    float: right;
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/static/js/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/static/css/query_db.css'/>
+</head>
+<body>
+<div class="container-fluid" id="div_1">
+    <form class="form-inline">
+        {% csrf_token %}
+     <div class="form-group">
+        <label for="query_word">查询已搜索的关键字记录：</label>
+         <input type="text"  class="form-control"  placeholder="请输入要查询的关键字" id="query_word">
+          <select class="form-control" id="select_country">
+            {% for country in country_list %}
+                {% if country.country %}
+                    <option value="{{ country.country }}">{{ country.country }}</option>
+                {% endif %}
+            {% endfor %}
+
+        </select>
+     </div>
+
+        <button id="query_btn" type="button" class="btn btn-primary">查询</button>
+    </form>
+    <table id="table_1" class="table table-bordered">
+        <thead>
+        <th style="width: 40px"><input type="checkbox"></th>
+        <th>名称</th>
+        <th>网址</th>
+        <th>email</th>
+        <th>国家</th>
+        <th>地址</th>
+        <th>电话</th>
+        <th>Facebook</th>
+        <th>Youtube</th>
+        <th>Twitter</th>
+        <th>搜索关键字</th>
+        <th style="width: 100px;">
+            <button id="delete_data" class="btn btn-default" type="button">删除选中</button>
+        </th>
+        </thead>
+    </table>
+</div>
+<div class="container-fluid" id="div_2">
+    <table id="table_2" class="table table-bordered">
+        <tbody id="table_content">
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+        function click_delete() {
+            $('.delete_data_child').click(function () {
+                $(this).parent().parent().remove();
+            });
+        }
+                // 删除所选的 搜索结果！！！
+        $('#delete_data').click(function () {
+            $("input[class='data_td']:checked").parent().parent().remove();
+        });
+        // 控制全选和全不选！！！
+        $('th input:checkbox').change(function () {
+            var e = $(this)[0].checked;
+            if (e) {
+                $('input[class="data_td"]:checkbox').prop('checked', true);
+            } else {
+                $('input[class="data_td"]:checkbox').prop('checked', false);
+            }
+        });
+
+    $(function () {
+        $('#query_btn').click(function () {
+            var word = $('#query_word').val();
+            var country = $('#select_country').val();
+            $.ajax({
+                url: '/query_from_db/',
+                type: 'post',
+                data: {
+                    'word': word,
+                    'country': country,
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                success: function (ret) {
+                    if (ret.code == 1) {
+                        alert(ret.msg);
+                        {#console.log(ret.final_html)#}
+                        $('#table_content').append(ret.data);
+                        $('#table_content tr td:last-child button:first-child').remove();
+                        $('#table_content tr td:last-child').css('text-align','center')
+                        click_delete();
+                    } else {
+                        alert(ret.msg)
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+</body>
+
+
+</html>

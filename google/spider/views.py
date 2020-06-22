@@ -18,6 +18,34 @@ def google(request):
         return redirect('/login/')
 
 
+def query_from_db(request):
+    if request.method == 'GET':
+        country_list = SearchResult.objects.all().values('country').distinct()
+        return render(request,'query_db.html',locals())
+    else:
+        word = request.POST.get('word')
+        country = request.POST.get('country')
+        print(word,country)
+        res = SearchResult.objects.all().filter(search_word=word,country=country)
+        final_html = ''
+        for data in res:
+            final_html += data.td_html
+        print(final_html)
+        if res:
+            ret = {
+                'code':1,
+                'msg':'查询到结果',
+                'data':final_html
+            }
+        else:
+            ret = {
+                'code': 0,
+                'msg': '未查询到结果',
+            }
+        return JsonResponse(ret)
+
+
+
 def bigemap(request):
     return render(request, 'bigemap.html')
 

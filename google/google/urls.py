@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^search_detail_by_ids/', spider_view.search_detail_by_ids),
     url(r'^extra_search/', spider_view.extra_search),
     url(r'^get_email/', spider_view.get_email),
+    url(r'^query_from_db/', spider_view.query_from_db),
     url(r'^$', spider_view.bigemap),
 ]
