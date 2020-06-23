@@ -246,7 +246,7 @@ def search_word(request):
     word = request.POST.get('word')
     key = '&key=' + 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
     fields = '&fields=place_id,formatted_address,name,types,geometry'
-    language = '&language=zh-CN'
+    language = '&language=en'
     url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?' \
           'input=%s&inputtype=textquery&%s%s%s' % (word, key, fields, language)
     res = requests.get(url)
@@ -438,7 +438,7 @@ def search_place_text(request):
     # radius = request.POST.get('radius')
     key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
     fields = 'place_id,formatted_address,name,types,geometry'
-    language = 'zh-CN'
+    language = 'en'
     url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?' \
           'input=%s&inputtype=textquery&key=%s&fields=%s&language=%s' % (word, key, fields, language)
     res = requests.get(url)
@@ -472,7 +472,7 @@ def search_place_text(request):
 
 def search_detail(place_id, word, p_obj):
     key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
-    language = 'zh-CN'
+    language = 'en'
     fields = 'address_component,adr_address,business_status,formatted_address,geometry,icon,name,permanently_closed,photo,place_id,plus_code,type,url,utc_offset,vicinity,' \
              'price_level,rating,review,user_ratings_total,' \
              'formatted_phone_number,international_phone_number,opening_hours,website'
@@ -486,92 +486,105 @@ def search_detail(place_id, word, p_obj):
     # with open(path, 'w', encoding='utf-8') as f:
     #     json.dump(data, f, ensure_ascii=False, indent=4)
     data_result = data['result']
-    data_html = '''
-    <tr id='%s'>
-        <td>
-            <input class='data_td' type='checkbox'>
-        </td>
-        <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
-        <td><a href='%s' target="_blank">%s</a></td>
-        <td><span>%s</span></td>
-        <td><span>%s</span></td>
-        <td><span>%s</span></td>
-        <td><span>%s</span></td>
-        <td><a href='%s' target="_blank">%s</a></td>
-        <td><a href='%s' target="_blank">%s</a></td>
-        <td><a href='%s' target="_blank">%s</a></td>
-        <td><span>%s</span></td>
-        <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
-        <button class="btn btn-default delete_data_child" type="button">删除</button></td>
-    </tr>
-    '''
-    d_position = data_result['geometry']['location']
-    lat = d_position['lat']
-    lng = d_position['lng']
-    d_place_id = data_result.get('place_id')
-    d_name = data_result.get('name', "")
-    d_type = data_result.get('type', "")
-    d_website = data_result.get('website', "")
 
-    d_addr = data_result.get('formatted_address', "")
-    d_phone = data_result.get('formatted_phone_number', "")
+    # 去除所有包含中文的数据！！！
+    reg = re.compile(u'[\u4e00-\u9fa5]')  # 检查中文
+    contents = data_result
+    json_data = json.dumps(contents, ensure_ascii=False)
+    match = reg.search(json_data)
+    if match:
+        print('包含中文***************************')
+        print(json_data)
+        print('包含中文***************************')
+        return None
+    else:
+        data_html = '''
+        <tr id='%s'>
+            <td>
+                <input class='data_td' type='checkbox'>
+            </td>
+            <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+            <td><a href='%s' target="_blank">%s</a></td>
+            <td><span>%s</span></td>
+            <td><span>%s</span></td>
+            <td><span>%s</span></td>
+            <td><span>%s</span></td>
+            <td><a href='%s' target="_blank">%s</a></td>
+            <td><a href='%s' target="_blank">%s</a></td>
+            <td><a href='%s' target="_blank">%s</a></td>
+            <td><span>%s</span></td>
+            <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
+            <button class="btn btn-default delete_data_child" type="button">删除</button></td>
+        </tr>
+        '''
+        d_position = data_result['geometry']['location']
+        lat = d_position['lat']
+        lng = d_position['lng']
+        d_place_id = data_result.get('place_id')
+        d_name = data_result.get('name', "")
+        d_type = data_result.get('type', "")
+        d_website = data_result.get('website', "")
 
-    d_facebook = ""
-    d_youtube = ""
-    d_twitter = ""
-    d_email = ''
+        d_addr = data_result.get('formatted_address', "")
+        d_phone = data_result.get('formatted_phone_number', "")
 
-    if d_website:
-        try:
-            result = getWebSource(d_website)
-            d_facebook = result['result']['facebook']
-            d_youtube = result['result']['youtube']
-            d_twitter = result['result']['twitter']
-            d_email = result['result']['mails']
-            if not d_email:
-                d_email = get_email(d_website)
-        except Exception as e:
-            print(e)
+        d_facebook = ""
+        d_youtube = ""
+        d_twitter = ""
+        d_email = ''
 
-    d_search_word = word
-    d_address_components = data_result.get('address_components')
-    d_country = ""
-    for i in d_address_components:
-        if "country" in i['types']:
-            d_country = i['long_name']
+        if d_website:
+            try:
+                result = getWebSource(d_website)
+                d_facebook = result['result']['facebook']
+                d_youtube = result['result']['youtube']
+                d_twitter = result['result']['twitter']
+                d_email = result['result']['mails']
+                if not d_email:
+                    d_email = get_email(d_website)
+            except Exception as e:
+                print(e)
 
-    data_html = data_html % (d_place_id, lat, lng,
-                             d_name, d_website,d_website, d_email, d_country, d_addr, d_phone,
-                             d_facebook, d_facebook,
-                             d_youtube,d_youtube,
-                             d_twitter,d_twitter,
-                             d_search_word)
+        d_search_word = word
+        d_address_components = data_result.get('address_components')
+        d_country = ""
+        for i in d_address_components:
+            if "country" in i['types']:
+                d_country = i['long_name']
 
-    p_obj.website = d_website
-    p_obj.email = d_email
-    p_obj.address = d_addr
-    p_obj.phone = d_phone
-    p_obj.facebook = d_facebook
-    p_obj.youtube = d_youtube
-    p_obj.twitter = d_twitter
-    p_obj.country = d_country
-    p_obj.td_html = data_html
-    p_obj.status = 1
-    p_obj.save()
+        data_html = data_html % (d_place_id, lat, lng,
+                                 d_name, d_website,d_website, d_email, d_country, d_addr, d_phone,
+                                 d_facebook, d_facebook,
+                                 d_youtube,d_youtube,
+                                 d_twitter,d_twitter,
+                                 d_search_word)
 
-    # SearchResult.objects.update_or_create(name=d_name,website=d_website,email=d_email,
-    #                           address=d_addr,phone=d_phone,
-    #                             facebook=d_facebook,youtube=d_youtube,twitter=d_twitter,
-    #                             search_word=d_search_word,country=d_country,place_id=d_place_id,td_html=data_html)
-    # print(data_html)
-    # ret = {
-    #     'status': 1,
-    #     'place_id': place_id,
-    #     'msg': '成功搜索到%s对应的具体位置' % word,
-    #     'data': data,
-    #     'data_html': data_html,
-    # }
-    return data_html
+
+        p_obj.website = d_website
+        p_obj.email = d_email
+        p_obj.address = d_addr
+        p_obj.phone = d_phone
+        p_obj.facebook = d_facebook
+        p_obj.youtube = d_youtube
+        p_obj.twitter = d_twitter
+        p_obj.country = d_country
+        p_obj.td_html = data_html
+        p_obj.status = 1
+        p_obj.save()
+
+        # SearchResult.objects.update_or_create(name=d_name,website=d_website,email=d_email,
+        #                           address=d_addr,phone=d_phone,
+        #                             facebook=d_facebook,youtube=d_youtube,twitter=d_twitter,
+        #                             search_word=d_search_word,country=d_country,place_id=d_place_id,td_html=data_html)
+        # print(data_html)
+        # ret = {
+        #     'status': 1,
+        #     'place_id': place_id,
+        #     'msg': '成功搜索到%s对应的具体位置' % word,
+        #     'data': data,
+        #     'data_html': data_html,
+        # }
+        return data_html
 
 
 def search_detail_by_ids(request):
@@ -586,9 +599,13 @@ def search_detail_by_ids(request):
                 # 搜索完详情，将详情信息更新到数据库中，并设置status = 1
                 word = p_obj.search_word
                 data_html = search_detail(id, word, p_obj)
+                if data_html is None:
+                    # 说明详情搜索结果中包含中文
+                    data_html = ''
             else:
                 data_html = p_obj.td_html
             data_list.append({'td_html': data_html, 'pid': id})
+
         ret = {
             'data': data_list,  # [{},{},{},{}]
             'code':1,
@@ -606,7 +623,7 @@ def search_near_by_latlng(lat, lng, word, radius):
     radius = radius
     query = word
     key = 'AIzaSyC2VUsehdGp0LS7uZgETWd_OoBA7DpHIYU'
-    language = 'zh-CN'
+    language = 'en'
     # 第一次发送请求搜寻地点获取 地点id,方便后续地点详情使用。
     url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s&radius=%s&language=%s&keyword=%s&key=%s' \
           % (location, radius, language, query, key)
@@ -681,39 +698,54 @@ def search_near_by(lat, lng, word, radius):
 
         # ******************
 
+
+
+
         data_final_html = ''
-        for data_result in data['results']:
-            place_id = data_result['place_id']
-            # type_str = ""
-            # for s in data_result['types']:
-            #     type_str += s + ','
+        for index,data_result in enumerate(data['results']):
+            # 去除所有包含中文的数据！！！
+            reg = re.compile(u'[\u4e00-\u9fa5]')  # 检查中文
+            contents = data_result
+            json_data = json.dumps(contents, ensure_ascii=False)
+            match = reg.search(json_data)
+            if match:
+                print('包含中文***************************')
+                print(json_data)
+                print('包含中文***************************')
+                data['results'].pop(index)
+                continue
+            else:
+                place_id = data_result['place_id']
+                # type_str = ""
+                # for s in data_result['types']:
+                #     type_str += s + ','
 
-            data_html = '''
-            <tr id='%s'>
-                <td>
-                     <input class='data_td' type='checkbox'>
-                </td>
-                <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
-                <td><a></a></td>
-                <td><span></span></td>
-                <td><span></span></td>
-                <td><span></span></td>
-                <td><span></span></td>
-                <td><span></span></td>
-                <td><span></span></td>
-                <td><span></span></td>
-                <td><span>%s</span></td>
-               <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
-                <button class="btn btn-default delete_data_child" type="button">删除</button></td>
-            </tr>
-            
-            '''
+                data_html = '''
+                <tr id='%s'>
+                    <td>
+                         <input class='data_td' type='checkbox'>
+                    </td>
+                    <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+                    <td><a></a></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span>%s</span></td>
+                   <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
+                    <button class="btn btn-default delete_data_child" type="button">删除</button></td>
+                </tr>
+                
+                '''
 
-            lat = data_result['geometry']['location']['lat']
-            lng = data_result['geometry']['location']['lng']
-            name = data_result['name']
-            data_html = data_html % (place_id, lat, lng, name, word)
-            data_final_html += data_html
+                lat = data_result['geometry']['location']['lat']
+                lng = data_result['geometry']['location']['lng']
+                name = data_result['name']
+                data_html = data_html % (place_id, lat, lng, name, word)
+                data_final_html += data_html
 
         print(len(data['results']))
         # 开启子线程，执行数据库添加操作！！！
@@ -835,34 +867,46 @@ def extra_search_near_by(lat, lng, word, radius):
     if len(final_data_result) > 0:
         data_final_html = ''
 
-        for data_result in final_data_result:
-            place_id = data_result['place_id']
-            data_html = '''
-                  <tr id='%s'>
-                      <td>
-                           <input class='data_td' type='checkbox'>
-                      </td>
-                      <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p></p></td>
-                      <td><p>%s</p></td>
-                     <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
-                      <button class="btn btn-default delete_data_child" type="button">删除</button></td>
-                  </tr>
-    
-                  '''
+        for index, data_result in enumerate(final_data_result):
+            # 去除所有包含中文的数据！！！
+            reg = re.compile(u'[\u4e00-\u9fa5]')  # 检查中文
+            contents = data_result
+            json_data = json.dumps(contents, ensure_ascii=False)
+            match = reg.search(json_data)
+            if match:
+                print('包含中文***************************')
+                print(json_data)
+                print('包含中文***************************')
+                final_data_result.pop(index)
+                continue
+            else:
+                place_id = data_result['place_id']
+                data_html = '''
+                                  <tr id='%s'>
+                                      <td>
+                                           <input class='data_td' type='checkbox'>
+                                      </td>
+                                      <td><a lat='%s' lng='%s' class='search_result_name'>%s</a></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p></p></td>
+                                      <td><p>%s</p></td>
+                                     <td><button class="btn btn-default search_detail_child" type="button">详情查询</button>
+                                      <button class="btn btn-default delete_data_child" type="button">删除</button></td>
+                                  </tr>
 
-            lat = data_result['geometry']['location']['lat']
-            lng = data_result['geometry']['location']['lng']
-            name = data_result['name']
-            data_html = data_html % (place_id, lat, lng, name, word)
-            data_final_html += data_html
+                                  '''
+
+                lat = data_result['geometry']['location']['lat']
+                lng = data_result['geometry']['location']['lng']
+                name = data_result['name']
+                data_html = data_html % (place_id, lat, lng, name, word)
+                data_final_html += data_html
 
         t = Thread(target=add_data, args=(final_data_result, SearchResult, word))
         t.start()

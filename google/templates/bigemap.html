@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 
-    <link href='http://www.bigemap.com:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet'/>
     <link href='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.css' rel='stylesheet'/>
     <link rel='stylesheet' href='/static/css/bigemap.css'/>
     <script src='http://47.244.57.68:9000/bigemap.js/v2.1.0/bigemap.js'></script>
@@ -143,13 +142,19 @@
     //软件配置信息地址
     BM.Config.HTTP_URL = 'http://47.244.57.68:9000';
     // 在ID为map的元素中实例化一个地图，并设置地图的ID号为 bigemap.googlemap-streets，ID号程序自动生成，无需手动配置，并设置地图的投影为百度地图 ，中心点，默认的级别和显示级别控件
-    var map = BM.map('map', 'bigemap.googlemap-streets', {center: [0, 0], zoom: 2, zoomControl: true, minZoom: 2});
+    var map = BM.map('map', 'bigemap.googlemap-streets', {
+        center: [0, 0],
+        zoom: 2,
+        attributionControl: false,
+        zoomControl: true,
+        minZoom: 2
+    });
     // 创建一个标记，添加到map中
     {#var corner1 = BM.latLng(-180, 90);#}
     {#var corner2 = BM.latLng(180, -90);#}
     {#var bounds = BM.latLngBounds(corner1, corner2);#}
     {#map.setMaxBounds(bounds)#}
-
+    //BM.map('map', 'bigemap.googlemap-satellite', {center: [ 30,104], zoom: 3,attributionControl:false, zoomControl: true});
     var google_satellite = BM.tileLayer('bigemap.googlemap-satellite');
     var google_street = BM.tileLayer('bigemap.googlemap-streets');
     document.getElementById('satellite').addEventListener('click', function () {
@@ -284,9 +289,15 @@
                             for (var i = 0; i < data.length; i++) {
                                 var place_id = data[i].pid
                                 var td_html = data[i].td_html
-                                // 根据place_id 找到之前的tr，然后替换为新的td_html
-                                var str_id = '#' + place_id;
-                                $(str_id).replaceWith(td_html)
+                                if (td_html) {
+                                    // 根据place_id 找到之前的tr，然后替换为新的td_html
+                                    var str_id = '#' + place_id;
+                                    $(str_id).replaceWith(td_html)
+                                } else {
+                                    // td_html = ‘’ 说明详情页中包含中文，不要该结果！！
+                                    var str_id = '#' + place_id;
+                                    $(str_id).remove();
+                                }
                             }
                             click_a();
                             // {#click_search_detail();#}
@@ -577,13 +588,18 @@
                                 for (var i = 0; i < data.length; i++) {
                                     var place_id = data[i].pid
                                     var td_html = data[i].td_html
-                                    // 根据place_id 找到之前的tr，然后替换为新的td_html
-                                    var str_id = '#' + place_id;
-                                    $(str_id).replaceWith(td_html)
+                                    if (td_html) {
+                                        // 根据place_id 找到之前的tr，然后替换为新的td_html
+                                        var str_id = '#' + place_id;
+                                        $(str_id).replaceWith(td_html)
+                                    } else {
+                                        var str_id = '#' + place_id;
+                                        $(str_id).remove();
+                                    }
                                 }
                                 // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
-                              //  click_a();
-                               // click_delete();
+                                //  click_a();
+                                // click_delete();
                             } else {
                                 var str_id = '#' + id;
                                 $(str_id).remove();

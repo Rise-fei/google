@@ -9,6 +9,8 @@ input[type=checkbox] {
     width: 20px;
 }
 .table>thead>tr>th {
+    padding: 0;
+    line-height: 0;
     vertical-align: middle;
 }
 td {
@@ -146,10 +148,10 @@ table{
     box-shadow: 0px 5px 5px 1px rgba(0,0,0,0.2)
 }
 .box2{
-    top: 100px;
+    top: 43px;
 }
 .mapbox{
-    height: 552px;position: relative;z-index: 8
+    height: 450px;position: relative;z-index: 8
 }
 th{
     background-color:#f2f2f2;
@@ -160,11 +162,21 @@ th,td{
     text-align: center;
 }
 .searchTh button{
+    /*width: 100%;*/
+    /*margin-top: 5px;*/
+    /*display: block;*/
+}
+.bigemap-logo{
+    display: none;
+}
+@media (max-width: 768px){
+    .searchTh button{
     width: 100%;
     margin-top: 5px;
     display: block;
 }
-@media (max-width: 768px){
+
+
     input{
         width: 100%;
         margin: 5px 0 5px 0;
