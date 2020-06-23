@@ -30,7 +30,7 @@
 
         <button id="query_btn" type="button" class="btn btn-primary">查询</button>
         <a id="export_email" href="#" class="btn btn-warning">导出邮箱</a>
-        <div id="pro_bar" style="display:none;width: 100px;z-index: 10;position: fixed;top: 8px;left: 46%">
+        <div id="pro_bar" style="display:none;width: 100px;z-index: 10;position: fixed;top: 8px;right:60px">
             <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
 
@@ -86,13 +86,12 @@
             a.target = '_blank';
             a.download = 'email.csv';
         })
-     // 点击某一个具体的搜索详情
+      // 点击某一个具体的搜索详情
     function click_search_detail() {
         $('.search_detail_child').click(function () {
-            if(flag_search_all){
+            if (flag_search_all) {
                 alert('请等待搜索任务执行完毕再操作！！！')
-            }
-            else {
+            } else {
                 flag_search_all = true
                 var id_list = [];
                 var id = $(this).parent().parent().attr('id')
@@ -120,12 +119,13 @@
                         $('.progress-bar').css('width', '100%');
                         setTimeout(function () {
                             $('#pro_bar').css('display', 'none');
-                        },500)
+                        }, 500)
                         flag_search_all = false
 
                         // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
 
-                             var data = ret.data;
+                        if (ret.code == 1) {
+                            var data = ret.data;
                             for (var i = 0; i < data.length; i++) {
                                 var place_id = data[i].pid
                                 var td_html = data[i].td_html
@@ -133,9 +133,13 @@
                                 var str_id = '#' + place_id;
                                 $(str_id).replaceWith(td_html)
                             }
-                          // click_a();
-                           // {#click_search_detail();#}
-                           click_delete();
+                           // click_a();
+                            // {#click_search_detail();#}
+                            click_delete();
+                        } else {
+                            var str_id = '#' + id;
+                            $(str_id).remove()
+                        }
                     }
                 })
             }
@@ -148,13 +152,12 @@
         });
     }
 
+
      // 搜索所有选中td 的详情信息！！
-        $('#search_detail').click(function ()
-        {
-            if(flag_search_all){
+        $('#search_detail').click(function () {
+            if (flag_search_all) {
                 alert('请等待搜索执行完毕后操作！！！')
-            }
-            else {
+            } else {
                 flag_search_all = true
                 var li = $("input[class='data_td']:checked")
                 var li_len = li.length;
@@ -163,30 +166,33 @@
                 $('.progress-bar').css('width', 0);
                 $('#pro_bar').css('display', 'block')
                 t2 = window.setInterval(function () {
-                        if (index_list.length < li_len) {
-                            //   i    /  l         index/i = 100/l    index = 100 * i / l
-                            //  index / 100
-                            index = 100 * index_list.length / li_len
-                            if(index>100)
-                                index=100;
-                            s = String(index) + '%'
-                            $('.progress-bar').css('width', s)
-                            console.log('**********' + index + '*********' + index_list)
-                        }
-                        else {
-                            flag_search_all = false
-                             $('#pro_bar').css('display', 'none');
-                             window.clearInterval(t2)
-                        }
-                        console.log('---------' + index)
-                    }, 1000)
+                    if (index_list.length < li_len) {
+                        //   i    /  l         index/i = 100/l    index = 100 * i / l
+                        //  index / 100
+                        index = 100 * index_list.length / li_len
+                        if (index > 100)
+                            index = 100;
+                        s = String(index) + '%'
+                        $('.progress-bar').css('width', s)
+                        console.log('**********' + index + '*********' + index_list)
+                    } else {
+                        // 当全部tr的详情搜索完毕时，将flag设为false，将进度条去除。将计时器去除，添加点击定位坐标事件和删除tr事件
+                        flag_search_all = false
+                        $('#pro_bar').css('display', 'none');
+                        window.clearInterval(t2)
+                        // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
+                        //click_a();
+                        click_delete();
+                    }
+                    console.log('---------' + index)
+                }, 1000)
 
                 for (var i = 0; i < li.length; i++) {
                     var id_list = [];
                     // 将每一个勾选状态的 placeid 放到一个列表中
                     var id = $(li[i]).parent().parent().attr('id')
                     id_list.push(id)
-                       // 将id_list 变为json串
+                    // 将id_list 变为json串
                     var ids = JSON.stringify(id_list)
                     {#var li_len = li.length; // 1个3 秒   一共  3 * l * x = 100  x = 100/5/l = 20/l    100/l#}
                     $.ajax({
@@ -194,7 +200,7 @@
                         type: 'get',
                         success: function (ret) {
                             index_list.push(1)
-                            //if(ret.code==1){
+                            if (ret.code == 1) {
                                 // 将查询的详情信息放入页面中（将之前的tr删了，直接把新的替换过来）
                                 var data = ret.data;
                                 for (var i = 0; i < data.length; i++) {
@@ -205,10 +211,12 @@
                                     $(str_id).replaceWith(td_html)
                                 }
                                 // 将信息替换后，重新调用 几个button的点击事件，否则不生效！！
-                               // click_a();
-                                click_delete();
-
-
+                              //  click_a();
+                               // click_delete();
+                            } else {
+                                var str_id = '#' + id;
+                                $(str_id).remove();
+                            }
                         }
                     })
                 }
