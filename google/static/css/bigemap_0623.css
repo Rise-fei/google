@@ -68,7 +68,7 @@ table tr td:last-child {
 #info {
     z-index: 10;
     color: #155724;
-     background-color: rgb(212, 237, 218,.6);
+    background-color: #d4edda;
     padding: .75rem 1.25rem;
     margin-bottom: 1rem;
     border: 1px solid transparent;
@@ -142,27 +142,8 @@ table{
   overflow-x: hidden;
   overflow-y: auto;
 }
-.box1{
-    box-shadow: 0px 5px 5px 1px rgba(0,0,0,0.2)
-}
 .box2{
-    top: 100px;
-}
-.mapbox{
-    height: 552px;position: relative;z-index: 8
-}
-th{
-    background-color:#f2f2f2;
-}
-th,td{
-    min-width: 100px;
-    vertical-align:middle!important;
-    text-align: center;
-}
-.searchTh button{
-    width: 100%;
-    margin-top: 5px;
-    display: block;
+    top: 62px;
 }
 @media (max-width: 768px){
     input{
@@ -178,7 +159,7 @@ th,td{
     }
     #info{
         border-radius: 0;
-        background-color: rgb(212, 237, 218,.6)
+        background-color: rgb(212, 237, 218,.7)
     }
     .tool{
           justify-content:center;
@@ -188,7 +169,6 @@ th,td{
     }
     .btn{
         padding: 4px 10px;
-        float: right;
     }
     select{
         padding: 4px 5px;
@@ -210,16 +190,8 @@ th,td{
         display: block;
     }
     .box2{
-    top: 82px;
-    }
-    .mapbox{
-        height: 370px;
-    }
-
-    th,td{
-        padding: 4px!important;
-        font-size: 12px!important;
-    }
+    top: 114px;
+}
 }
 .box1{
     position: absolute;
