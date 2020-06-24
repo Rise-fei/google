@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='/static/css/query_db.css'/>
+      <script src='/static/js/FileSaver.js'></script>
 </head>
 <body style="overflow-y:scroll;">
 <div class="container-fluid" id="div_1">
@@ -70,22 +71,30 @@
 
 <script>
     flag_search_all = false
-    $('#export_email').click(function () {
-        var li = $("input[class='data_td']:checked")
-        var final_email_str = "";
-        for (var i = 0; i < li.length; i++) {
-            var email_str = li.eq(i).parent().next().next().next().text()
-            if (email_str) {
-                var word = li.eq(i).parent().siblings().eq(-2).text();
-                var final_str = word + '|' + email_str.replace(/;/g, '\n' + word + '|') + '\n'
-                final_email_str += final_str;
+           $('#export_email').click(function () {
+            var li = $("input[class='data_td']:checked")
+            if(li.length==0){
+                alert('请勾选有效邮箱后导出！！！')
             }
-        }
-        var a = $(this)[0]
-        a.href = 'data:attachment/csv,' + encodeURI(final_email_str);
-        a.target = '_blank';
-        a.download = 'email.csv';
-    })
+            else{
+                var final_email_str = "";
+                for (var i = 0; i < li.length; i++) {
+                    var email_str = li.eq(i).parent().next().next().next().text()
+                    if (email_str) {
+                        var word = li.eq(i).parent().siblings().eq(-2).text();
+                        var final_str = word + '|' + email_str.replace(/;/g, '\n' + word + '|') + '\n'
+                        final_email_str += final_str;
+                    }
+                }
+                {#var a = $(this)[0]#}
+                {#a.href = 'data:attachment/csv,' + encodeURI(final_email_str);#}
+                {#a.target = '_blank';#}
+                {#a.download = 'email.csv';#}
+                var exportContent = "\uFEFF";
+                var blob = new Blob([exportContent+final_email_str],{type: "text/plain;charset=utf-8"});
+                saveAs(blob,  word+"_email.csv");
+            }
+        })
 
     // 点击某一个具体的搜索详情
     function click_search_detail() {

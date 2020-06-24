@@ -120,6 +120,8 @@ def offline(request):
 
 
 def login(request):
+    if request.session.get('is_login'):
+        return redirect('/bigemap/')
     return render(request, 'login_log.html')
 
 
@@ -202,6 +204,35 @@ def login_check(request):
         request.COOKIES['session_key'] = ""
         response = JsonResponse(ret)
     return response
+
+def check():
+    while True:
+        time.sleep(10)
+        login_records = CustLoginRecord.objects.all()
+        if login_records:
+            for record in login_records:
+                last_active_time = record.login_time.timestamp()
+                current_time = time.time()
+                # 如果用户1个小时内没有活跃，那么将其t下线！
+                if current_time - last_active_time > 3600:
+                    print(record.username)
+                    # 下线该用户
+                    session_key = record.oa_session_key
+                    url = 'http://www.sstrade.net:8080/ssapi/logoutaccount2?session_key=%s' % session_key
+                    res = requests.get(url)
+                    response_content = res.content.decode()
+                    try:
+                        record.delete()
+                    except:
+                        pass
+
+def check_status(request):
+    t = Thread(target=check)
+    t.setName('check')
+    t.start()
+    return HttpResponse('开启检测线程')
+
+
 
 
 # {"username":"ceshi","is_login":true,"session_key":"rdaa69o8r9u7umoke23yjrwx1crr9p2o","_session_expiry":0}
@@ -539,8 +570,8 @@ def search_detail(place_id, word, p_obj):
                 d_facebook = result['result']['facebook']
                 d_youtube = result['result']['youtube']
                 d_twitter = result['result']['twitter']
-                d_email = result['result']['mails']
-                if not d_email:
+                d_email = ';'.join(result['result']['mails'])
+                if not result['result']['mails']:
                     d_email = get_email(d_website)
             except Exception as e:
                 print(e)

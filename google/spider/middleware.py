@@ -2,12 +2,14 @@ from django.utils.deprecation import MiddlewareMixin
 from django.shortcuts import redirect
 import re
 import requests
+import time,datetime
+from spider.models import CustLoginRecord
 class LoginCheckMiddleware(MiddlewareMixin):
     def process_request(self,request):
         print(request.session.get('is_login'))
         print(request.path_info)
         # 如果请求url在白名单内，说明该请求不必登录就可用！
-        white_url = ['/login/','/login_check/','/admin/','/static/','/logout/','/offline/','^$']
+        white_url = ['/check_status/','/login/','/login_check/','/admin/','/static/','/logout/','/offline/','^$']
         for re_url in white_url:
             if re.match(re_url,request.path):
                 # print('路径匹配成功')
@@ -25,6 +27,11 @@ class LoginCheckMiddleware(MiddlewareMixin):
                 res = requests.get(url)
                 if res.content.decode() == 'yes':
                     print('当前浏览器中存储的用户cookie：session_key在服务器端有对应的记录，即该用户是登录状态！')
+                    record = CustLoginRecord.objects.filter(oa_session_key=session_key)
+                    print(record[0].oa_session_key)
+                    if record:
+                        record[0].login_time = datetime.datetime.fromtimestamp(time.time())
+                        record[0].save()
                     return
                 else:
                     print('当前浏览器中存储的用户cookie：session_key在服务器端没有对应的记录，即该用户应该下线！')
