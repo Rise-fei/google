@@ -35,5 +35,6 @@ urlpatterns = [
     url(r'^get_email/', spider_view.get_email),
     url(r'^query_from_db/', spider_view.query_from_db),
     url(r'^check_status/', spider_view.check_status),
+    url(r'^logout_all_cuser/', spider_view.logout_all_cuser),
     url(r'^$', spider_view.bigemap),
 ]

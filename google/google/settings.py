@@ -131,3 +131,4 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # 部署更改如下： 1.debug  2. static file   3. middleware    4.tools->proxies
+# 开启检测线程  /check_status

@@ -9,7 +9,7 @@ class LoginCheckMiddleware(MiddlewareMixin):
         print(request.session.get('is_login'))
         print(request.path_info)
         # 如果请求url在白名单内，说明该请求不必登录就可用！
-        white_url = ['/check_status/','/login/','/login_check/','/admin/','/static/','/logout/','/offline/','^$']
+        white_url = ['/logout_all_cuser/','/check_status/','/login/','/login_check/','/admin/','/static/','/logout/','/offline/','^$']
         for re_url in white_url:
             if re.match(re_url,request.path):
                 # print('路径匹配成功')
@@ -28,8 +28,8 @@ class LoginCheckMiddleware(MiddlewareMixin):
                 if res.content.decode() == 'yes':
                     print('当前浏览器中存储的用户cookie：session_key在服务器端有对应的记录，即该用户是登录状态！')
                     record = CustLoginRecord.objects.filter(oa_session_key=session_key)
-                    print(record[0].oa_session_key)
                     if record:
+                        print(record[0].oa_session_key)
                         record[0].login_time = datetime.datetime.fromtimestamp(time.time())
                         record[0].save()
                     return

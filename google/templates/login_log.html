@@ -206,7 +206,22 @@
                                     location.href = '/bigemap/'
                                 }
                                 else{
-                                    alert('下线失败，请联系管理员进行操作！')
+                                    {#alert('下线失败，请联系管理员进行操作!')#}
+                                    var flag3 = confirm('下线单个终端失败，是否下线该用户所有终端？（其他登录终端将全部下线）')
+                                    if(flag3){
+                                        var cname = ret.username;
+                                        $.ajax({
+                                            {#url:'http://www.sstrade.net:8080/ssapi/logout_cuser_all?cusername='+cname,#}
+                                            url:'/logout_all_cuser/?username='+cname,
+                                            type:'get',
+                                            success:function (ret) {
+                                                alert('下线成功，请重新登录！')
+                                                {#location.href = '/login/'#}
+                                            }
+                                        })
+                                    }else {
+
+                                    }
                                 }
                             }
                         })

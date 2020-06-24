@@ -73,50 +73,67 @@ def offline(request):
         authorization_num = int(res)
         cust_records = CustLoginRecord.objects.filter(username=username).order_by('-login_time')
 
-        for cust in cust_records[authorization_num - 1:]:
-            # 超出授权数，向oa系统发送请求清除当前sessionkey对应的session信息。
-            oa_session_key = cust.oa_session_key
-            url = 'http://www.sstrade.net:8080/ssapi/logoutaccount2?session_key=%s' % oa_session_key
-            res = requests.get(url)
-            response_content = res.content.decode()
-            print(response_content)
-            cust.delete()
+        if cust_records[authorization_num-1]:
+            for cust in cust_records[authorization_num - 1:]:
+                # 超出授权数，向oa系统发送请求清除当前sessionkey对应的session信息。
+                oa_session_key = cust.oa_session_key
+                url = 'http://www.sstrade.net:8080/ssapi/logoutaccount2?session_key=%s' % oa_session_key
+                res = requests.get(url)
+                response_content = res.content.decode()
+                print(response_content)
+                cust.delete()
 
-        # # 将之前的最早登录的终端下线
-        # cust = CustLoginRecord.objects.filter(username=username).order_by('login_time').first()
-        # oa_session_key = cust.oa_session_key
-        # url = 'http://www.sstrade.net:8080/ssapi/logoutaccount2?session_key=%s' % oa_session_key
-        # res = requests.get(url)
-        # response_content = res.content.decode()
-        # print(response_content)
-        # cust.delete()
+            # # 将之前的最早登录的终端下线
+            # cust = CustLoginRecord.objects.filter(username=username).order_by('login_time').first()
+            # oa_session_key = cust.oa_session_key
+            # url = 'http://www.sstrade.net:8080/ssapi/logoutaccount2?session_key=%s' % oa_session_key
+            # res = requests.get(url)
+            # response_content = res.content.decode()
+            # print(response_content)
+            # cust.delete()
 
-        ret = {
-            'code': 1
-        }
+            ret = {
+                'code': 1
+            }
 
-        # 然后再登录当前账号
-        url2 = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=%s&version=%s' % (
-            username, password, product, version)
-        res2 = requests.get(url2)
-        response_content2 = res2.content.decode()
-        print('*******************')
-        print(response_content2)
-        print('*******************')
+            # 然后再登录当前账号
+            url2 = 'http://www.sstrade.net:8080/ssapi/customerlogin/?username=%s&password=%s&product=%s&version=%s' % (
+                username, password, product, version)
+            res2 = requests.get(url2)
+            response_content2 = res2.content.decode()
+            print('*******************')
+            print(response_content2)
+            print('*******************')
 
-        request.session['username'] = username
-        print(res2.cookies)
-        request.session['is_login'] = True
-        response = JsonResponse(ret)
-        response.set_cookie('session_key', res2.cookies.get('sessionid'))
-        CustLoginRecord.objects.create(username=username, oa_session_key=res2.cookies.get('sessionid'))
-
+            request.session['username'] = username
+            print(res2.cookies)
+            request.session['is_login'] = True
+            response = JsonResponse(ret)
+            response.set_cookie('session_key', res2.cookies.get('sessionid'))
+            CustLoginRecord.objects.create(username=username, oa_session_key=res2.cookies.get('sessionid'))
+        else:
+            ret = {
+                'code': 0,
+                'username': username,
+            }
+            response = JsonResponse(ret)
     except:
         ret = {
             'code': 0,
+            'username':username,
         }
         response = JsonResponse(ret)
     return response
+
+
+# 待完善，注销当前用户的所有终端！！！慎用！！
+def logout_all_cuser(request):
+    cname = request.GET.get('username')
+    url = 'http://www.sstrade.net:8080/ssapi/logout_cuser_all?cusername='+cname
+    print(url)
+    res = requests.get(url)
+    print(res)
+    return JsonResponse({})
 
 
 def login(request):
